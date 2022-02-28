@@ -18,6 +18,18 @@ class ResConfigSettings(models.TransientModel):
     job_number_activate = fields.Boolean("Job number activation", config_parameter='sale.job_number_activate')
             
     def set_values(self):
+        self.create_sequence()
+        super(ResConfigSettings, self).set_values()   
+        self.env['ir.config_parameter'].sudo().set_param("sale.job_number_activate", self.job_number_activate)
+     
+        if self.prefix_job_number_set:      
+            self.env['ir.config_parameter'].sudo().set_param("sale.prefix_job_number_set", self.prefix_job_number_set)
+        if self.suffix_job_number_set:      
+            self.env['ir.config_parameter'].sudo().set_param("sale.suffix_job_number_set", self.suffix_job_number_set)
+        else:
+            raise ValidationError(_('Empty prefix or suffix options for job number.'))
+
+    def create_sequence(self):
         if self.job_number_start_number and self.job_number_activate:  
             current_sequence = self.env['ir.sequence'].search([('code', '=', 'sale.order.job.number')])
             new_vals = {
@@ -33,23 +45,4 @@ class ResConfigSettings(models.TransientModel):
             if current_sequence:                   
                 current_sequence.write(new_vals)   
             else:         
-                self.env['ir.sequence'].create(new_vals) 
-        super(ResConfigSettings, self).set_values()   
-        self.env['ir.config_parameter'].sudo().set_param("sale.job_number_activate", self.job_number_activate)
-     
-        if self.prefix_job_number_set:      
-            # prefix_values = self.prefix_job_number_set.split(",")
-            # prefix_array = []
-            # for x in prefix_values:
-            #   prefix_array.append((x.lower(),x.upper()))
-            self.env['ir.config_parameter'].sudo().set_param("sale.prefix_job_number_set", self.prefix_job_number_set)
-            # self.env['ir.config_parameter'].sudo().set_param("sale.prefix_job_number_options", prefix_array) 
-        if self.suffix_job_number_set:      
-            # suffix_values = self.suffix_job_number_set.split(",")
-            # suffix_array = []
-            # for x in suffix_values:
-            #   suffix_array.append((x.lower(),x.upper()))
-            self.env['ir.config_parameter'].sudo().set_param("sale.suffix_job_number_set", self.suffix_job_number_set)
-            # self.env['ir.config_parameter'].sudo().set_param("sale.suffix_job_number_options", suffix_array)
-        else:
-            raise ValidationError(_('Empty prefix or suffix options for job number.'))
+                self.env['ir.sequence'].create(new_vals)         
