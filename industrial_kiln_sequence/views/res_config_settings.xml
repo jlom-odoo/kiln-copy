@@ -14,15 +14,15 @@
                     <div class="o_setting_right_pane">
                         <label for="job_number_activate"/>
                         <div class="text-muted">
-                            Addition of job number to sales quotation and sales order  
+                            Add Job Number to Sales Quotation and Sales Order  
                         </div>
-                        <div class="content-group"  attrs="{'invisible': [('job_number_activate','=',False)]}">
-                            <div class="mt16">
-                                <span class="col-lg-3">Job number start sequence: <field name="job_number_start_number"/></span>
-                                <span class="col-lg-3">Next job number in sequence: <field name="next_job_number"/></span>
-                                <span class="col-lg-3">Prefix options: <field name="prefix_job_number_set" placeholder="ex: A,B,JK"/></span>                  
-                                <span class="col-lg-3">Suffix options: <field name="suffix_job_number_set" placeholder="ex: A,B,JK"/></span>
-                            </div>
+                        <div class="content-group" colspan="2" attrs="{'invisible': [('job_number_activate','=',False)]}">
+                            <group>
+                                    <field name="job_number_start_number"/>
+                                    <field name="prefix_job_number_set" placeholder="eg: A,B,JK" help="Options separated by comma"/>  
+                                    <field name="next_job_number"/>                      
+                                    <field name="suffix_job_number_set" placeholder="eg: A,B,JK" help="Options separated by comma"/> 
+                            </group>            
                         </div>
                     </div>
                 </div>

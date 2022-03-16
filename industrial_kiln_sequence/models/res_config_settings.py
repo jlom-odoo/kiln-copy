@@ -4,7 +4,6 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
-
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
@@ -13,18 +12,19 @@ class ResConfigSettings(models.TransientModel):
 
     job_number_start_number = fields.Integer(string='Range from',config_parameter='sale.job_number_start_number')
     next_job_number = fields.Char(string='Next Job Number sequence', default=_get_next_barcode)
-    prefix_job_number_set = fields.Char(string='Prefix Options',config_parameter='sale.prefix_job_number_set',help='options separated by comma')
-    suffix_job_number_set = fields.Char(string='Suffix Options',config_parameter='sale.suffix_job_number_set')
+    prefix_job_number_set = fields.Char(string='Prefix Options',config_parameter='sale.prefix_job_number_set',help='Options separated by comma')
+    suffix_job_number_set = fields.Char(string='Suffix Options',config_parameter='sale.suffix_job_number_set',help='Options separated by comma')
     job_number_activate = fields.Boolean("Job number activation", config_parameter='sale.job_number_activate')
             
     def set_values(self):
         self.create_sequence()
         super(ResConfigSettings, self).set_values()   
-        self.env['ir.config_parameter'].sudo().set_param("sale.job_number_activate", self.job_number_activate)
-     
-        if self.prefix_job_number_set:      
+        self.env['ir.config_parameter'].sudo().set_param("sale.job_number_activate", self.job_number_activate) 
+        if self.prefix_job_number_set: 
+            self.prefix_job_number_set.replace(" ", "")     
             self.env['ir.config_parameter'].sudo().set_param("sale.prefix_job_number_set", self.prefix_job_number_set)
-        if self.suffix_job_number_set:      
+        if self.suffix_job_number_set:  
+            self.suffix_job_number_set.replace(" ", "")     
             self.env['ir.config_parameter'].sudo().set_param("sale.suffix_job_number_set", self.suffix_job_number_set)
         else:
             raise ValidationError(_('Empty prefix or suffix options for job number.'))

@@ -7,12 +7,10 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@class='o_address_format']" position="after">
-                <field name="plant_code" readonly="1"/>
-                <field name="plant_sequence" readonly="1"/>
-                <div class="content-group"  attrs="{'invisible': [('plant_code','=',False)]}">
+                <field name="plant_code_sequence" readonly="1"/>
+                <div class="content-group"  attrs="{'invisible': [('plant_code_sequence','=',False)]}">
                     <div class="mt16">
-                        <span class="col-lg-3">Plant Code: <field name="plant_code"/></span>
-                        <span class="col-lg-3">Next number in sequence: <field name="plant_sequence"/></span>
+                        <span class="col-lg-3">Plant Code: <field name="plant_code_sequence"/></span>
                     </div>
                 </div>
             </xpath>

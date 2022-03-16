@@ -28,7 +28,7 @@
     'data': [
         'views/res_config_settings.xml',
         'views/view_order_form.xml',
-        'views/res_partner_views.xml'   
+        # 'views/res_partner_views.xml'   
     ],
     # only loaded in demonstration mode
     'demo': [
