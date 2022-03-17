@@ -4,8 +4,8 @@
 
     'summary': """
         This module adds job number to sales order and quotation 
-        On customer form adds field plant_code which is a sequence for every new customer
-        plant_code sequence is created when a sales order for a new customer is created""",
+        On customer form adds field plant_code which is a sequence for every new customer o is shared by companies with 3 same first letters
+        plant_code sequence is updated when a sales order for a new customer is created""",
 
     'description': """
         This module inherits product template and populate barcode based on sequence settings  
@@ -28,7 +28,7 @@
     'data': [
         'views/res_config_settings.xml',
         'views/view_order_form.xml',
-        # 'views/res_partner_views.xml'   
+        'views/res_partner_views.xml'   
     ],
     # only loaded in demonstration mode
     'demo': [

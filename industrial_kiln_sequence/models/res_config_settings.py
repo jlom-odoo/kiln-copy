@@ -39,7 +39,7 @@ class ResConfigSettings(models.TransientModel):
                             'prefix': '',
                             'suffix': '',
                             'number_next_actual': self.job_number_start_number,
-                            'padding': 0,
+                            'padding': 5,
                             'number_increment': 1
                     }
             if current_sequence:                   

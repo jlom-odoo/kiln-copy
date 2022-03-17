@@ -8,8 +8,7 @@ class SaleOrder(models.Model):
      def _get_next_job_number_sequence(self):      
         if not self.env['ir.config_parameter'].sudo().get_param("sale.job_number_activate"):
           return False
-        next_job_number=self.env['ir.sequence'].search([('code', '=', 'sale.order.job.number')]).number_next_actual
-        # next_job_number=self.env['ir.sequence'].next_by_code('sale.order.job.number') 
+        next_job_number=self.env['ir.sequence'].search([('code', '=', 'sale.order.job.number')]).number_next_actual 
         if next_job_number:
           print('NNNNNNNNNNNNNN Next job number',next_job_number)
           return next_job_number
@@ -21,11 +20,10 @@ class SaleOrder(models.Model):
      prefix_job_number = fields.Selection(string='Prefix Job Number',selection="get_prefix_set")
      suffix_job_number = fields.Selection(string='Suffix Job number',selection="get_suffix_set")
      has_job_number = fields.Boolean('job number set al least once for this record', default=False, store=True)
-    #  partner_parent_name = fields.Char(related='partner_id.parent_name')
-    #  plant_code = fields.Char(string='Plant Code', related='partner_id.plant_code')
-    #  plant_sequence = fields.Char(string= 'Plant sequence', related='partner_id.plant_sequence')
-    #  country_id = fields.Char(string= 'Country', related='partner_id.country_id')
-    #  country_id = fields.One2many('res.partner', string='Country', inverse='country_id')
+     partner_parent_name = fields.Char(related='partner_id.parent_name')
+     plant_code = fields.Char(string='Plant Code', related='partner_id.plant_code')
+     plant_sequence = fields.Char(string= 'Plant code sequence')
+     has_plant_code_sequence = fields.Boolean('plant number set al least once for this record', default=False, store=True)
 
      def get_prefix_set(self) : 
         print('OOOOOOOOOOOOO  options prefix', self.env['ir.config_parameter'].sudo().get_param("sale.prefix_job_number_set"))
@@ -47,47 +45,7 @@ class SaleOrder(models.Model):
           for x in suffix_values:
             suffix_array.append((x.lower(),x.upper()))
           return suffix_array
-        else: return  
-
-    #  @api.depends('partner_parent_name','company_name', 'plant_code')
-    #  def create_plant_code(self):  
-    #    for order in self:
-    #       if not order.plant_sequence:
-    #         print('PPPPPPPPPP partner_parent_name', self.partner_parent_name)
-    #         print('PPPPPPPPPP partner_company_id', self.company_id)
-    #         company_name= order.company_id or order.partner_parent_name
-    #         if company_name:
-    #           if not order.plant_code:
-    #             order.plant_code = self.first_letters(company_name)
-    #             order.create_sequence('res.partner.'+ order.plant_code)
-    #           else:
-    #             order.plant_sequence = self.env['ir.sequence'].search([('code', '=', 'res.partner.'+ self.plant_code)]).number_next_actual 
-
-     def first_letters(self, partner_name):
-        alphanumeric = ""
-        for character in partner_name:
-          if character.isalnum():
-            alphanumeric += character
-        # alphanumeric += self.country_id[:3]    
-        alphanumeric += 'XYZ'
-        return alphanumeric[:3]
-
-    #  def create_sequence(self,sequence_code): 
-    #     current_sequence = self.env['ir.sequence'].search([('code', '=', sequence_code)])
-    #     new_vals = {
-    #                 'name': 'Plant sequence Industrial Kiln '+ sequence_code,
-    #                 'code': sequence_code,
-    #                 'implementation': 'standard',
-    #                 'prefix': '',
-    #                 'suffix': '',
-    #                 'number_next_actual': 1,
-    #                 'padding': 0,
-    #                 'number_increment': 1
-    #             }
-    #     if not current_sequence:         
-    #       self.env['ir.sequence'].create(new_vals)  
-    #     else:
-    #       self.plant_sequence=self.env['ir.sequence'].next_by_code('res.partner.'+ self.plant_code)    
+        else: return     
 
      @api.onchange('prefix_job_number','suffix_job_number')
      def set_job_number(self):
@@ -101,7 +59,21 @@ class SaleOrder(models.Model):
             self.env['ir.sequence'].next_by_code('sale.order.job.number')
             order.has_job_number = True
 
-   
+     @api.onchange('partner_id','plant_code')
+     def update_plant_code(self):
+        print('EEEEEEstamos en el update de plant code')
+        for order in self.filtered(lambda rec: rec.plant_code): 
+             print('EEEEEEstamos en el if de plant_code, sequence ',(self.env['ir.sequence'].search([('code', '=', 'res.partner.'+ self.plant_code)]).number_next_actual))
+             plant_code_sequence =  str(self.env['ir.sequence'].search([('code', '=', 'res.partner.'+ self.plant_code)]).number_next_actual)
+             plant_code_sequence = '0000'+ plant_code_sequence 
+             plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
+             order.plant_sequence = order.plant_code + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
+             if not order.has_plant_code_sequence:
+               order.has_plant_code_sequence = True
+               self.env['ir.sequence'].next_by_code('res.partner.'+ self.plant_code)
+        for order in self.filtered(lambda rec: not rec.plant_code): 
+             order.plant_sequence = False
+     
         
                
          
