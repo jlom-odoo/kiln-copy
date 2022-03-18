@@ -4,16 +4,17 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
+
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     def _get_next_barcode(self):
         return self.env['ir.sequence'].search([('code', '=', 'sale.order.job.number')]).number_next_actual
 
-    job_number_start_number = fields.Integer(string='Range from',config_parameter='sale.job_number_start_number')
+    job_number_start_number = fields.Integer(string='Range from', config_parameter='sale.job_number_start_number')
     next_job_number = fields.Char(string='Next Job Number sequence', default=_get_next_barcode)
-    prefix_job_number_set = fields.Char(string='Prefix Options',config_parameter='sale.prefix_job_number_set',help='Options separated by comma')
-    suffix_job_number_set = fields.Char(string='Suffix Options',config_parameter='sale.suffix_job_number_set',help='Options separated by comma')
+    prefix_job_number_set = fields.Char(string='Prefix Options', config_parameter='sale.prefix_job_number_set', help='Options separated by comma')
+    suffix_job_number_set = fields.Char(string='Suffix Options', config_parameter='sale.suffix_job_number_set', help='Options separated by comma')
     job_number_activate = fields.Boolean("Job number activation", config_parameter='sale.job_number_activate')
             
     def set_values(self):
