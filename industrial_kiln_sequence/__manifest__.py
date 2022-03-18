@@ -3,13 +3,12 @@
     'name': "industrial_kiln_added_fields",
 
     'summary': """
-        This module adds job number to sales order and quotation 
+        This module adds job number to sales order and quotation and plant code and sequence to customer info and sales order
         On customer form adds field plant_code which is a sequence for every new customer o is shared by companies with 3 same first letters
         plant_code sequence is updated when a sales order for a new customer is created""",
 
     'description': """
-        This module inherits product template and populate barcode based on sequence settings  
-        modified by the admin user.
+        This module inherits sale order and res partner, adding two sequences based in prefixes set in config and partner view.
     """,
 
     'author': "Odoo Inc",
