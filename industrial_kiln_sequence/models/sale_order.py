@@ -19,11 +19,11 @@ class SaleOrder(models.Model):
     sequence_job_number = fields.Char(string='Sequence Job number', default=_get_next_job_number_sequence)
     prefix_job_number = fields.Selection(string='Prefix Job Number', selection="get_prefix_set")
     suffix_job_number = fields.Selection(string='Suffix Job number', selection="get_suffix_set")
-    has_job_number = fields.Boolean('job number set al least once for this record', default=False)
+    has_job_number = fields.Boolean('job number set al least once for this record', default=False,store=True)
     partner_parent_name = fields.Char(related='partner_id.parent_name')
     plant_code = fields.Char(string='Plant Code', related='partner_id.plant_code')
-    plant_sequence = fields.Char(string='Plant code sequence')
-    has_plant_code_sequence = fields.Boolean('plant number set al least once for this record', default=False)
+    plant_sequence = fields.Char(string='Plant code sequence',store=True)
+    has_plant_code_sequence = fields.Boolean('plant number set al least once for this record', default=False,store=True)
 
     def get_prefix_set(self) :
         job_number_activated = self.env['ir.config_parameter'].sudo().get_param("sale.job_number_activate")

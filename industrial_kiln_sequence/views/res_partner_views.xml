@@ -6,14 +6,14 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@class='o_address_format']" position="after">
+            <xpath expr="//div[hasclass('o_address_format')]" position="after">
                 <div class="content-group" colspan="2" attrs="{'invisible': [('plant_code','=',False)]}">   
-                       <group>
-                            <label for="plant_code" string="Plant code" />
-                             <div  attrs="{'invisible': [('plant_code','=',False)]}">
-                                <field name="plant_code" />
-                            </div>     
-                       </group> 
+                    <group>
+                        <label for="plant_code" string="Plant code" />
+                            <div  attrs="{'invisible': [('plant_code','=',False)]}">
+                            <field name="plant_code" />
+                        </div>     
+                    </group> 
                 </div>      
             </xpath>
         </field>

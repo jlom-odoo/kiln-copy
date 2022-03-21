@@ -6,7 +6,7 @@ from odoo import models, fields, api
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    plant_code = fields.Char(string='Plant Code')
+    plant_code = fields.Char(string='Plant Code', store=True)
 
     @api.depends('is_company', 'name', 'parent_id.display_name', 'type', 'company_name')
     def _compute_display_name(self):
