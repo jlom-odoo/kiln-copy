@@ -16,14 +16,14 @@ class SaleOrder(models.Model):
             return
 
     job_number = fields.Char('Job Number', store=True)
-    sequence_job_number = fields.Char(string='Sequence Job number', default=_get_next_job_number_sequence, store=True)
+    sequence_job_number = fields.Char(string='Sequence Job number', default=_get_next_job_number_sequence)
     prefix_job_number = fields.Selection(string='Prefix Job Number', selection="get_prefix_set")
     suffix_job_number = fields.Selection(string='Suffix Job number', selection="get_suffix_set")
-    has_job_number = fields.Boolean('job number set al least once for this record', default=False, store=True)
+    has_job_number = fields.Boolean('job number set al least once for this record', default=False)
     partner_parent_name = fields.Char(related='partner_id.parent_name')
     plant_code = fields.Char(string='Plant Code', related='partner_id.plant_code')
     plant_sequence = fields.Char(string='Plant code sequence')
-    has_plant_code_sequence = fields.Boolean('plant number set al least once for this record', default=False, store=True)
+    has_plant_code_sequence = fields.Boolean('plant number set al least once for this record', default=False)
 
     def get_prefix_set(self) :
         job_number_activated = self.env['ir.config_parameter'].sudo().get_param("sale.job_number_activate")
@@ -35,7 +35,7 @@ class SaleOrder(models.Model):
                 prefix_array.append((x.lower(), x.upper()))
             return prefix_array
         else:
-            return
+            return [('select', 'Select')]
 
     def get_suffix_set(self):
         job_number_activated = self.env['ir.config_parameter'].sudo().get_param("sale.job_number_activate")
@@ -47,16 +47,18 @@ class SaleOrder(models.Model):
                 suffix_array.append((x.lower(), x.upper()))
             return suffix_array
         else:
-            return
+            return [('select', 'Select')]
 
     @api.onchange('prefix_job_number', 'suffix_job_number')
     def set_job_number(self):
-        for order in self.filtered(lambda rec: rec.prefix_job_number and rec.sequence_job_number and rec.suffix_job_number):
-            order.job_number = order.prefix_job_number + order.sequence_job_number + order.suffix_job_number
-            # job number can change but the sequence number will not increase
-            if not order.has_job_number:
-                self.env['ir.sequence'].next_by_code('sale.order.job.number')
-                order.has_job_number = True
+        job_number_activated = self.env['ir.config_parameter'].sudo().get_param("sale.job_number_activate")
+        if job_number_activated:
+            for order in self.filtered(lambda rec: rec.prefix_job_number and rec.sequence_job_number and rec.suffix_job_number):
+                order.job_number = order.prefix_job_number + order.sequence_job_number + order.suffix_job_number
+                # job number can change but the sequence number will not increase
+                if not order.has_job_number:
+                    self.env['ir.sequence'].next_by_code('sale.order.job.number')
+                    order.has_job_number = True
 
     @api.onchange('partner_id', 'plant_code')
     def update_plant_code(self):
