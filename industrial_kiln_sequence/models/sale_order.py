@@ -15,7 +15,7 @@ class SaleOrder(models.Model):
         else:
             return
 
-    job_number = fields.Char('Job Number', compute='job_sequence_update', store=True)
+    job_number = fields.Char('Job Number', store=True)
     sequence_job_number = fields.Char(string='Sequence Job number', default=_get_next_job_number_sequence, store=True)
     prefix_job_number = fields.Selection(string='Prefix Job Number', selection="get_prefix_set")
     suffix_job_number = fields.Selection(string='Suffix Job number', selection="get_suffix_set")
