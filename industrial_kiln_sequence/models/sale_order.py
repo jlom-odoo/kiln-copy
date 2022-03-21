@@ -26,8 +26,9 @@ class SaleOrder(models.Model):
     has_plant_code_sequence = fields.Boolean('plant number set al least once for this record', default=False, store=True)
 
     def get_prefix_set(self) :
+        job_number_activated = self.env['ir.config_parameter'].sudo().get_param("sale.job_number_activate")
         prefix_job_number_set = self.env['ir.config_parameter'].sudo().get_param("sale.prefix_job_number_set")
-        if prefix_job_number_set:
+        if job_number_activated and prefix_job_number_set:
             prefix_values = prefix_job_number_set.split(",")
             prefix_array = []
             for x in prefix_values:
@@ -37,8 +38,9 @@ class SaleOrder(models.Model):
             return
 
     def get_suffix_set(self):
+        job_number_activated = self.env['ir.config_parameter'].sudo().get_param("sale.job_number_activate")
         suffix_job_number_set = self.env['ir.config_parameter'].sudo().get_param("sale.suffix_job_number_set")
-        if suffix_job_number_set:
+        if job_number_activated and suffix_job_number_set:
             suffix_values = suffix_job_number_set.split(",")
             suffix_array = []
             for x in suffix_values:
