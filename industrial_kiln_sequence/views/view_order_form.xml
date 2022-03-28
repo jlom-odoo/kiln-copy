@@ -7,14 +7,18 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='payment_term_id']" position="after">
-                    <div class="content-group" colspan="2" attrs="{'invisible': [('state','=','draft')]}"> -->
-                    <!-- <div class="content-group" colspan="2"> -->
+                    
+                    <div class="content-group" colspan="2" attrs="{'invisible': [('sequence_job_number','=',False)]}">  
+                        <div >
+                            <h2 style="color:#F23127" attrs="{'invisible': [('prefix_job_number','!=',False),('suffix_job_number','!=',False)]}">--------------------------------------------------------------------------<br />
+                            Edit to select prefix and suffix for Job Number </h2> 
+                        </div>
                         <group>
                             <label for="sequence_job_number" string="Job number" />
-                             <div  attrs="{'invisible': [('state','=','draft')]}">
+                             <div  attrs="{'invisible': [('sequence_job_number','=',False)]}">
                                 <field name="prefix_job_number" placeholder="Select prefix"/><field name="sequence_job_number"/><field name="suffix_job_number" placeholder="Select suffix"/>     
                             </div>
-                        </group>        
+                        </group>                  
                     </div>            
                 </xpath>
                 <xpath expr="//field[@name='partner_id']" position="after">
