@@ -40,7 +40,7 @@ class ResConfigSettings(models.TransientModel):
                             'implementation': 'standard',
                             'prefix': '',
                             'suffix': '',
-                            'number_next_actual': self.job_number_start_number,
+                            'number_next': self.job_number_start_number,
                             'padding': 5,
                             'number_increment': 1
                     }
