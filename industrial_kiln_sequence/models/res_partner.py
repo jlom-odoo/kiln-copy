@@ -17,8 +17,6 @@ class ResPartner(models.Model):
                 plant_initials = self.first_letters(partner.display_name)
                 partner.create_sequence('res.partner.' + plant_initials)
                 plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
-                print('PPPPPPPartner initials', plant_initials)
-                print('PPPPPPPPPPPPPPPPPPP plant_code_sequence',plant_code_sequence)
                 plant_code_sequence = '00' + str(plant_code_sequence)
                 plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
                 partner.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
