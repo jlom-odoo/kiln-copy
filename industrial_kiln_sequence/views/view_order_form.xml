@@ -14,7 +14,7 @@
                             Edit to select prefix and suffix for Job Number </h2> 
                         </div>
                         <group>
-                            <label for="sequence_job_number" string="Job number" />
+                            <label for="sequence_job_number" string="Job Number" />
                              <div  attrs="{'invisible': [('sequence_job_number','=',False)]}">
                                 <field name="prefix_job_number" placeholder="Select prefix"/><field name="sequence_job_number"/><field name="suffix_job_number" placeholder="Select suffix"/>     
                             </div>
