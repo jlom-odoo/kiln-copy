@@ -13,18 +13,19 @@ class ResPartner(models.Model):
     def _compute_display_name(self):
         super(ResPartner, self)._compute_display_name()
         for partner in self:
-            if partner.is_company:
-                plant_initials = self.first_letters(partner.display_name)
-                partner.create_sequence('res.partner.' + plant_initials)
-                plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
-                plant_code_sequence = '00' + str(plant_code_sequence)
-                plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
-                partner.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
-            else:
-                if partner.parent_plant_code:
-                    partner.plant_code=partner.parent_plant_code
+            if not partner.plant_code:
+                if partner.is_company:
+                    plant_initials = self.first_letters(partner.display_name)
+                    partner.create_sequence('res.partner.' + plant_initials)
+                    plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
+                    plant_code_sequence = '00' + str(plant_code_sequence)
+                    plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
+                    partner.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
                 else:
-                    partner.plant_code=False
+                    if partner.parent_plant_code:
+                        partner.plant_code=partner.parent_plant_code
+                    else:
+                        partner.plant_code=False
 
     def first_letters(self, partner_name):
         alphanumeric = ""
