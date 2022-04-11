@@ -16,16 +16,16 @@
                         <group>
                             <label for="sequence_job_number" string="Job Number" />
                              <div  attrs="{'invisible': [('sequence_job_number','=',False)]}">
-                                <field name="prefix_job_number" placeholder="Select prefix"/><field name="sequence_job_number"/><field name="suffix_job_number" placeholder="Select suffix"/>     
+                                <field name="prefix_job_number" placeholder="Select prefix"/><field name="sequence_job_number" readonly="1"/><field name="suffix_job_number" placeholder="Select suffix"/>     
                             </div>
-                        </group>                  
+                        </group>                   
                     </div>            
                 </xpath>
-                <xpath expr="//field[@name='partner_id']" position="after">
+                <xpath expr="//field[@name='partner_shipping_id']" position="after">
                     <div class="content-group" colspan="2" attrs="{'invisible': [('plant_code_sequence','=',False)]}">   
                        <group>
                             <label for="plant_code_sequence" string="Plant code" />
-                             <div  attrs="{'invisible': [('plant_code_sequence','=',False)]}">
+                             <div>
                                 <field name="plant_code_sequence" readonly="1"/>
                             </div>     
                        </group> 
