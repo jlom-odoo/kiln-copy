@@ -24,7 +24,7 @@
                 <xpath expr="//field[@name='partner_shipping_id']" position="after">
                     <div class="content-group" colspan="2" attrs="{'invisible': [('plant_code_sequence','=',False)]}">   
                        <group>
-                            <label for="plant_code_sequence" string="Plant code" />
+                            <label for="plant_code_sequence" string="Plant Code" />
                              <div>
                                 <field name="plant_code_sequence" readonly="1"/>
                             </div>     
