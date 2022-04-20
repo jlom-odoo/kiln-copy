@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<odoo>
+    <record id="res_config_settings_inherit_add_config_job_number_industrial_kiln" model="ir.ui.view">
+        <field name="name">view_res_config_settings_inherit_add_config_job_number_industrial_kiln</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='no_edit_order']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" id="job_number_configurator">
+                    <div class="o_setting_left_pane">
+                        <field name="job_number_activate"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="job_number_activate"/>
+                        <div class="text-muted">
+                            Add Job Number to Sales Quotation and Sales Order  
+                        </div>
+                        <div class="content-group" colspan="2" attrs="{'invisible': [('job_number_activate','=',False)]}">
+                            <group>
+                                    <field name="job_number_start_number"/>
+                                    <field name="prefix_job_number_set" placeholder="eg: A,B,JK" help="Options separated by comma"/>  
+                                    <field name="next_job_number" readonly="1"/>                      
+                                    <field name="suffix_job_number_set" placeholder="eg: A,B,JK" help="Options separated by comma"/> 
+                            </group>            
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
