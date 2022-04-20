@@ -30,9 +30,9 @@ class SaleOrder(models.Model):
                     plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
                     self.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
                     if partner.parent_id:
-                        partner.parent_id.plant_code = self.plant_code
+                        partner.sudo().parent_id.plant_code = self.plant_code
                 else:
-                    self.plant_code = False
+                    self.sudo().plant_code = False
 
 
     def first_letters(self, partner_name):
