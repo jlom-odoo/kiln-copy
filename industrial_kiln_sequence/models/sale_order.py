@@ -14,6 +14,10 @@ class SaleOrder(models.Model):
     has_job_number = fields.Boolean('Has Job Number')
     plant_code = fields.Char(string='Plant Code', related='partner_id.plant_code',compute='update_plant_code', readonly=False, store=True)
     plant_code_sequence = fields.Char(string='Plant code sequence',store=True)
+    #just to ensure, the error should not be present
+    _sql_constraints = [
+        ('sequence_job_number_uniq', 'unique(sequence_job_number)', " Field sequence_job_number should be unique. Use valid Job Number settings")
+    ]
 
     @api.depends('partner_id')
     def _compute_plant_code(self): 
@@ -63,7 +67,8 @@ class SaleOrder(models.Model):
     def set_next_job_number_sequence(self):
         for order in self:
             if self.env['ir.config_parameter'].sudo().get_param("sale.job_number_activate"):
-                next_job_number=self.env['ir.sequence'].search([('code', '=', 'sale.order.job.number')]).number_next_actual     
+                next_job_number = self.env['ir.sequence'].next_by_code('sale.order.job.number')
+                # next_job_number=self.env['ir.sequence'].search([('code', '=', 'sale.order.job.number')]).number_next_actual     
                 if next_job_number: 
                     order.sequence_job_number=next_job_number
                 else:   
@@ -101,9 +106,8 @@ class SaleOrder(models.Model):
         for order in self:
             if order in self.filtered(lambda rec: rec.prefix_job_number and rec.prefix_job_number != '' and rec.sequence_job_number and rec.suffix_job_number and rec.prefix_job_number != ''):
                 order.job_number = order.prefix_job_number + order.sequence_job_number + order.suffix_job_number
-                # job number can change in a s.o but the sequence number will not increase
                 if not order.has_job_number:
-                    self.env['ir.sequence'].next_by_code('sale.order.job.number')
+                    # self.env['ir.sequence'].next_by_code('sale.order.job.number')
                     order.has_job_number = True
             else:
                 order.job_number = False   
