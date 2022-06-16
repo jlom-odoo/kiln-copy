@@ -51,7 +51,8 @@ class SaleOrder(models.Model):
 
     def create_sequence(self, sequence_name):
         current_sequence = self.env['ir.sequence'].search([('code', '=', sequence_name)])
-        new_vals = {
+        if not current_sequence:
+            new_vals = {
                     'name': 'Industrial Kiln ' + sequence_name,
                     'code': sequence_name,
                     'implementation': 'standard',
@@ -61,7 +62,6 @@ class SaleOrder(models.Model):
                     'padding': 0,
                     'number_increment': 1
                 }
-        if not current_sequence:
             self.env['ir.sequence'].create(new_vals)
 
     def set_next_job_number_sequence(self):
