@@ -19,6 +19,10 @@ class ResPartner(models.Model):
                     plant_code_sequence = '00' + str(plant_code_sequence)
                     plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
                     partner.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
+                else:
+                    partner.plant_code = False    
+            else:
+                partner.plant_code = False   
                     
     def first_letters(self, partner_name):
         alphanumeric = ""
