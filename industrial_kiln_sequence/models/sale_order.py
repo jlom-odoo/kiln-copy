@@ -12,8 +12,8 @@ class SaleOrder(models.Model):
     prefix_job_number = fields.Selection(string='Prefix Job Number', selection="get_prefix_set")
     suffix_job_number = fields.Selection(string='Suffix Job number', selection="get_suffix_set")
     has_job_number = fields.Boolean('Has Job Number')
-    plant_code = fields.Char(string='Plant Code', related='partner_id.plant_code',compute='update_plant_code', readonly=False, store=True)
-    plant_code_sequence = fields.Char(string='Plant code sequence',store=True)
+    plant_code = fields.Char(string='Plant Code', compute='_compute_plant_code', readonly=False, store=True)
+    # plant_code_sequence = fields.Char(string='Plant code sequence',store=True)
     #just to ensure, the error should not be present
     _sql_constraints = [
         ('sequence_job_number_uniq', 'unique(sequence_job_number)', " Field sequence_job_number should be unique. Use valid Job Number settings")
@@ -22,31 +22,40 @@ class SaleOrder(models.Model):
     @api.depends('partner_id')
     def _compute_plant_code(self): 
         for order in self:
-            partner = self.partner_id
+            order.plant_code = False
+            partner = order.partner_id
             if partner.parent_id.plant_code:
                 order.plant_code = partner.parent_id.plant_code
-            elif not order.plant_code:
+            elif partner.plant_code:
+                print('Partner plant code', partner.plant_code)
+                order.plant_code = partner.plant_code   
+
+    @api.depends('partner_id')
+    def _set_plant_code(self): 
+        for order in self:
+            partner = self.partner_id
+            if not order.plant_code:
                 if partner.is_company or partner.parent_id:
-                    plant_initials = self.first_letters(partner.display_name)
+                    print('EEEEEE entering the case')
+                    plant_initials = self.first_letters(partner,partner.display_name)
                     self.create_sequence('res.partner.' + plant_initials)
                     plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
                     plant_code_sequence = '00' + str(plant_code_sequence)
                     plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
-                    self.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
+                    order.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
+                    partner.sudo().plant_code = order.plant_code
                     if partner.parent_id:
-                        partner.sudo().parent_id.plant_code = self.plant_code
+                        partner.sudo().parent_id.plant_code = order.plant_code
                 else:
-                    self.sudo().plant_code = False
+                    order.plant_code = False                
 
-
-    def first_letters(self, partner_name):
+    def first_letters(self, partner, partner_name):
         alphanumeric = ""
         for character in partner_name:
             if character.isalnum():
-                alphanumeric += character.upper()
-        partner = self.partner_id        
+                alphanumeric += character.upper()    
         if partner.country_id:    
-            alphanumeric += partner.country_id.name[:3]
+            alphanumeric += partner.country_id.name[:3].upper()
         return alphanumeric[:3]
 
     def create_sequence(self, sequence_name):
@@ -113,19 +122,10 @@ class SaleOrder(models.Model):
                 order.job_number = False   
                 
                 order.has_job_number = False 
-               
-
-    @api.depends('partner_id')
-    def update_plant_code_sequence(self):
-        for order in self.filtered(lambda rec: rec.plant_code):   
-            order.plant_code_sequence = order.plant_code    
-        for order in self.filtered(lambda rec: not rec.plant_code): 
-            order.plant_code_sequence = False
            
     def action_confirm(self): 
         self.set_next_job_number_sequence()
-        self._compute_plant_code()
-        self.update_plant_code_sequence()
+        self._set_plant_code()
         super(SaleOrder, self).action_confirm()
 
    

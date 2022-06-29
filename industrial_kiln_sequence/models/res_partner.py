@@ -11,9 +11,10 @@ class ResPartner(models.Model):
     @api.depends('customer_rank')
     def _compute_plant_code(self): 
         for partner in self:
-            if not partner.plant_code:
+            print('Partner name', partner.display_name or 'noName')
+            if not partner.plant_code and partner.is_company:
                 if partner.customer_rank == 1 and partner.display_name:
-                    plant_initials = self.first_letters(partner.display_name)
+                    plant_initials = self.first_letters(partner, partner.display_name)
                     self.create_sequence('res.partner.' + plant_initials)
                     plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
                     plant_code_sequence = '00' + str(plant_code_sequence)
@@ -24,13 +25,13 @@ class ResPartner(models.Model):
             else:
                 partner.plant_code = False   
                     
-    def first_letters(self, partner_name):
+    def first_letters(self, partner, partner_name):
         alphanumeric = ""
         for character in partner_name:
             if character.isalnum():
                 alphanumeric += character.upper()    
-        if self.country_id:    
-            alphanumeric += self.country_id.name[:3]
+        if partner.country_id:    
+            alphanumeric += partner.country_id.name[:3].upper()
         return alphanumeric[:3]
 
     def create_sequence(self, sequence_name):
@@ -47,6 +48,21 @@ class ResPartner(models.Model):
                     'number_increment': 1
                 }
             self.env['ir.sequence'].create(new_vals)
-        
-               
+
+    def _compute_plant_code_action(self): 
+        for partner in self:
+            print('Partner name', partner.display_name or 'noName')
+            if  partner.display_name:
+                plant_initials = self.first_letters(partner, partner.display_name)
+                self.create_sequence('res.partner.' + plant_initials)
+                plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
+                plant_code_sequence = '00' + str(plant_code_sequence)
+                plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
+                partner.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
+            else:
+                partner.plant_code = False    
+            
+    @api.model
+    def action_set_plant_code(self):
+        self.search([('plant_code', '=', False), ('customer_rank', '=', 1), ('is_company', '=', True)])._compute_plant_code_action()           
          
