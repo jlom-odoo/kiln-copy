@@ -11,7 +11,6 @@ class ResPartner(models.Model):
     @api.depends('customer_rank')
     def _compute_plant_code(self): 
         for partner in self:
-            print('Partner name', partner.display_name or 'noName')
             if not partner.plant_code and partner.is_company:
                 if partner.customer_rank == 1 and partner.display_name:
                     plant_initials = self.first_letters(partner, partner.display_name)
@@ -51,7 +50,6 @@ class ResPartner(models.Model):
 
     def _compute_plant_code_action(self): 
         for partner in self:
-            print('Partner name', partner.display_name or 'noName')
             if  partner.display_name:
                 plant_initials = self.first_letters(partner, partner.display_name)
                 self.create_sequence('res.partner.' + plant_initials)

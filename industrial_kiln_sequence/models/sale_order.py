@@ -27,7 +27,6 @@ class SaleOrder(models.Model):
             if partner.parent_id.plant_code:
                 order.plant_code = partner.parent_id.plant_code
             elif partner.plant_code:
-                print('Partner plant code', partner.plant_code)
                 order.plant_code = partner.plant_code   
 
     @api.depends('partner_id')
@@ -36,7 +35,6 @@ class SaleOrder(models.Model):
             partner = self.partner_id
             if not order.plant_code:
                 if partner.is_company or partner.parent_id:
-                    print('EEEEEE entering the case')
                     plant_initials = self.first_letters(partner,partner.display_name)
                     self.create_sequence('res.partner.' + plant_initials)
                     plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
