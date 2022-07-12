@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+import time
 
 
 class ResPartner(models.Model):
@@ -11,22 +12,15 @@ class ResPartner(models.Model):
     @api.depends('customer_rank')
     def _compute_plant_code(self): 
         for partner in self:
-            if not partner.plant_code and partner.is_company:
-                if partner.customer_rank == 1 and partner.display_name:
-                    plant_initials = self.first_letters(partner, partner.display_name)
-                    self.create_sequence('res.partner.' + plant_initials)
-                    plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
-                    plant_code_sequence = '00' + str(plant_code_sequence)
-                    plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
-                    partner.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
-                else:
-                    partner.plant_code = False    
+            if not partner.plant_code and partner.is_company and partner.customer_rank == 1 and partner.display_name:
+                plant_initials = self.first_letters(partner, partner.display_name)
+                self.create_sequence('res.partner.' + plant_initials)
+                plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
+                plant_code_sequence = '00' + str(plant_code_sequence)
+                plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
+                partner.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
             else:
-                partner.plant_code = False   
-
-    def _reset_plant_code(self): 
-        for partner in self:
-            partner.plant_code = False               
+                partner.plant_code = False            
                     
     def first_letters(self, partner, partner_name):
         alphanumeric = ""
@@ -62,13 +56,18 @@ class ResPartner(models.Model):
                 plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
                 partner.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
             else:
-                partner.plant_code = False    
+                partner.plant_code = False
+
+    def _reset_plant_code(self):
+        for partner in self:
+            partner.plant_code = False              
             
-    @api.model
     def action_set_plant_code(self):
-        self.search([('is_company', '=', True),('plant_code', '=', False),('customer_rank', '=', 1), ('is_company', '=', True)], limit=1000)._compute_plant_code_action()
+        self.search([('is_company', '=', True),('plant_code', '=', False),('customer_rank', '=', 1)])._compute_plant_code_action()
 
-    @api.model
     def action_reset_plant_code(self):
-        self.search([('is_company', '=', True),('plant_code', '!=', False)], limit=1000)._reset_plant_code()
-
+        self.search([('is_company', '=', True),('plant_code', '!=', False),('customer_rank', '=', 1)])._reset_plant_code()
+        plant_code_sequences = self.env['ir.sequence'].search([('code', 'like', 'res.partner.%')])
+        if plant_code_sequences:
+            for sequence in plant_code_sequences:
+                sequence.unlink()
