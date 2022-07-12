@@ -23,6 +23,10 @@ class ResPartner(models.Model):
                     partner.plant_code = False    
             else:
                 partner.plant_code = False   
+
+    def _reset_plant_code(self): 
+        for partner in self:
+            partner.plant_code = False               
                     
     def first_letters(self, partner, partner_name):
         alphanumeric = ""
@@ -62,5 +66,9 @@ class ResPartner(models.Model):
             
     @api.model
     def action_set_plant_code(self):
-        self.search([('plant_code', '=', False), ('customer_rank', '=', 1), ('is_company', '=', True)])._compute_plant_code_action()           
-         
+        self.search([('is_company', '=', True),('plant_code', '=', False),('customer_rank', '=', 1), ('is_company', '=', True)], limit=1000)._compute_plant_code_action()
+
+    @api.model
+    def action_reset_plant_code(self):
+        self.search([('is_company', '=', True),('plant_code', '!=', False)], limit=1000)._reset_plant_code()
+

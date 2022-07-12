@@ -32,4 +32,6 @@
     # only loaded in demonstration mode
     'demo': [
     ],
+    'post_init_hook': 'plant_code_post_init',
+    'uninstall_hook': "plant_code_reset_uninstall_hook",
 }
