@@ -13,7 +13,6 @@ class SaleOrder(models.Model):
     suffix_job_number = fields.Selection(string='Suffix Job number', selection="get_suffix_set")
     has_job_number = fields.Boolean('Has Job Number')
     plant_code = fields.Char(string='Plant Code', compute='_compute_plant_code', readonly=False, store=True)
-    # plant_code_sequence = fields.Char(string='Plant code sequence',store=True)
     #just to ensure, the error should not be present
     _sql_constraints = [
         ('sequence_job_number_uniq', 'unique(sequence_job_number)', " Field sequence_job_number should be unique. Use valid Job Number settings")
@@ -29,7 +28,6 @@ class SaleOrder(models.Model):
             elif partner.plant_code:
                 order.plant_code = partner.plant_code   
 
-    @api.depends('partner_id')
     def _set_plant_code(self): 
         for order in self:
             partner = self.partner_id
@@ -41,9 +39,10 @@ class SaleOrder(models.Model):
                     plant_code_sequence = '00' + str(plant_code_sequence)
                     plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
                     order.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
-                    partner.sudo().plant_code = order.plant_code
                     if partner.parent_id:
                         partner.sudo().parent_id.plant_code = order.plant_code
+                    else:
+                        partner.sudo().plant_code = order.plant_code    
                 else:
                     order.plant_code = False                
 
@@ -75,7 +74,6 @@ class SaleOrder(models.Model):
         for order in self:
             if self.env['ir.config_parameter'].sudo().get_param("sale.job_number_activate"):
                 next_job_number = self.env['ir.sequence'].next_by_code('sale.order.job.number')
-                # next_job_number=self.env['ir.sequence'].search([('code', '=', 'sale.order.job.number')]).number_next_actual     
                 if next_job_number: 
                     order.sequence_job_number=next_job_number
                 else:   
@@ -114,7 +112,6 @@ class SaleOrder(models.Model):
             if order in self.filtered(lambda rec: rec.prefix_job_number and rec.prefix_job_number != '' and rec.sequence_job_number and rec.suffix_job_number and rec.prefix_job_number != ''):
                 order.job_number = order.prefix_job_number + order.sequence_job_number + order.suffix_job_number
                 if not order.has_job_number:
-                    # self.env['ir.sequence'].next_by_code('sale.order.job.number')
                     order.has_job_number = True
             else:
                 order.job_number = False   
@@ -125,6 +122,3 @@ class SaleOrder(models.Model):
         self.set_next_job_number_sequence()
         self._set_plant_code()
         super(SaleOrder, self).action_confirm()
-
-   
-   
