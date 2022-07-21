@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
     prefix_job_number = fields.Selection(string='Prefix Job Number', selection="get_prefix_set")
     suffix_job_number = fields.Selection(string='Suffix Job number', selection="get_suffix_set")
     has_job_number = fields.Boolean('Has Job Number')
-    plant_code = fields.Char(string='Plant Code', compute='_compute_plant_code', readonly=True)
+    plant_code = fields.Char(string='Plant Code', compute='_compute_plant_code', store=True, readonly=True)
 
     #just to ensure, the error should not be present
     _sql_constraints = [
