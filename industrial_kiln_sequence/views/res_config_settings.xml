@@ -18,10 +18,10 @@
                         </div>
                         <div class="content-group" colspan="2" attrs="{'invisible': [('job_number_activate','=',False)]}">
                             <group>
-                                    <field name="job_number_start_number"/>
-                                    <field name="prefix_job_number_set" placeholder="eg: A,B,JK" help="Options separated by comma"/>  
-                                    <field name="next_job_number" readonly="1"/>                      
-                                    <field name="suffix_job_number_set" placeholder="eg: A,B,JK" help="Options separated by comma"/> 
+                                <field name="job_number_start_number"/>
+                                <field name="prefix_job_number_set" placeholder="eg: A,B,JK" help="Options separated by comma"/>  
+                                <field name="next_job_number" readonly="1"/>                      
+                                <field name="suffix_job_number_set" placeholder="eg: A,B,JK" help="Options separated by comma"/> 
                             </group>            
                         </div>
                     </div>
