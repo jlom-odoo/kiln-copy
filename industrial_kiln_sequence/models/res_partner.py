@@ -7,7 +7,7 @@ import time
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    plant_code = fields.Char(string='Plant Code', compute='_compute_plant_code' , store=True)
+    plant_code = fields.Char(string='Plant Code', compute='_compute_plant_code', store=True, readonly=True)
 
     @api.depends('customer_rank')
     def _compute_plant_code(self): 
