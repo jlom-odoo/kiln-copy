@@ -68,7 +68,7 @@ class SaleOrder(models.Model):
                     'padding': 0,
                     'number_increment': 1
                 }
-            self.env['ir.sequence'].create(new_vals)
+            self.env['ir.sequence'].sudo().create(new_vals)
 
     def set_next_job_number_sequence(self):
         for order in self:

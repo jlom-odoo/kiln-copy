@@ -44,7 +44,7 @@ class ResPartner(models.Model):
                     'padding': 0,
                     'number_increment': 1
                 }
-            self.env['ir.sequence'].create(new_vals)
+            self.env['ir.sequence'].sudo().create(new_vals)
 
     def _compute_plant_code_action(self): 
         for partner in self:
