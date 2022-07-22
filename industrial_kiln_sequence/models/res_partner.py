@@ -46,6 +46,7 @@ class ResPartner(models.Model):
                 }
             self.env['ir.sequence'].sudo().create(new_vals)
 
+
     def _compute_plant_code_action(self): 
         for partner in self:
             if  partner.display_name:
