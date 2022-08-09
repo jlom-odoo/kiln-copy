@@ -34,6 +34,7 @@ class SaleOrder(models.Model):
             elif partner.plant_code:
                 order.plant_code = partner.plant_code
 
+    @api.depends('plant_code')
     def _inverse_plant_code(self):
         for order in self:
             partner = order.partner_id
