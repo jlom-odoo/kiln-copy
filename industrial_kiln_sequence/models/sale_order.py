@@ -17,7 +17,7 @@ class SaleOrder(models.Model):
         string='Suffix Job number', selection="get_suffix_set")
     has_job_number = fields.Boolean('Has Job Number')
     plant_code = fields.Char(
-        string='Plant Code', compute='_compute_plant_code', store=True, readonly=True)
+        string='Plant Code', compute='_compute_plant_code', inverse='_inverse_plant_code', store=True)
     # just to ensure, the error should not be present
     _sql_constraints = [
         ('sequence_job_number_uniq', 'unique(sequence_job_number)',
@@ -33,6 +33,14 @@ class SaleOrder(models.Model):
                 order.plant_code = partner.parent_id.plant_code
             elif partner.plant_code:
                 order.plant_code = partner.plant_code
+
+    def _inverse_plant_code(self):
+        for order in self:
+            partner = order.partner_id
+            if partner.parent_id:
+                partner.parent_id.plant_code = order.plant_code
+            else:
+                partner.plant_code = order.plant_code
 
     def _set_plant_code(self):
         for order in self:
