@@ -61,19 +61,6 @@ class ResPartner(models.Model):
             else:
                 partner.plant_code = False
 
-    def _reset_plant_code(self):
-        for partner in self:
-            partner.plant_code = False
-
     def action_set_plant_code(self):
         self.search([('is_company', '=', True), ('plant_code', '=', False),
                     ('customer_rank', '=', 1)])._compute_plant_code_action()
-
-    def action_reset_plant_code(self):
-        self.search([('is_company', '=', True), ('plant_code', '!=',
-                    False), ('customer_rank', '=', 1)])._reset_plant_code()
-        plant_code_sequences = self.env['ir.sequence'].search(
-            [('code', 'like', 'res.partner.%')])
-        if plant_code_sequences:
-            for sequence in plant_code_sequences:
-                sequence.unlink()
