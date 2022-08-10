@@ -8,35 +8,22 @@ from odoo import models, fields, api, _
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    job_number = fields.Char(
-        'Job Number', compute='set_job_number', store=True)
+    job_number = fields.Char('Job Number', compute='set_job_number', store=True)
     sequence_job_number = fields.Char(string='Sequence Job number')
-    prefix_job_number = fields.Selection(
-        string='Prefix Job Number', selection="get_prefix_set")
-    suffix_job_number = fields.Selection(
-        string='Suffix Job number', selection="get_suffix_set")
+    prefix_job_number = fields.Selection(string='Prefix Job Number', selection="get_prefix_set")
+    suffix_job_number = fields.Selection(string='Suffix Job number', selection="get_suffix_set")
     has_job_number = fields.Boolean('Has Job Number')
-    plant_code = fields.Char(
-        string='Plant Code', compute='_compute_plant_code', inverse='_inverse_plant_code', store=True)
+    plant_code = fields.Char(string='Plant Code', compute='_compute_plant_code', store=True)
     # just to ensure, the error should not be present
     _sql_constraints = [
         ('sequence_job_number_uniq', 'unique(sequence_job_number)',
          " Field sequence_job_number should be unique. Use valid Job Number settings")
     ]
 
-    @api.depends('partner_id', 'partner_id.plant_code', 'partner_id.parent_id.plant_code')
+    @api.depends('partner_id', 'partner_id.commercial_partner_id.plant_code')
     def _compute_plant_code(self):
         for order in self:
-            order.plant_code = False
-            partner = order.partner_id
-            if partner.parent_id.plant_code:
-                order.plant_code = partner.parent_id.plant_code
-            elif partner.plant_code:
-                order.plant_code = partner.plant_code
-
-    @api.depends('plant_code')
-    def _inverse_plant_code(self):
-        pass
+            order.plant_code = order.partner_id.commercial_partner_id.plant_code
 
     def _set_plant_code(self):
         for order in self:
