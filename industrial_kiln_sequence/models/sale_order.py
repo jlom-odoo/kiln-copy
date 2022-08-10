@@ -36,29 +36,19 @@ class SaleOrder(models.Model):
 
     @api.depends('plant_code')
     def _inverse_plant_code(self):
-        for order in self:
-            partner = order.partner_id
-            if partner.parent_id:
-                partner.parent_id.plant_code = order.plant_code
-            else:
-                partner.plant_code = order.plant_code
+        pass
 
     def _set_plant_code(self):
         for order in self:
             partner = self.partner_id
             if not order.plant_code:
                 if partner.is_company or partner.parent_id:
-                    plant_initials = self.first_letters(
-                        partner, partner.display_name)
+                    plant_initials = self.first_letters(partner, partner.display_name)
                     self.create_sequence('res.partner.' + plant_initials)
-                    plant_code_sequence = self.env['ir.sequence'].next_by_code(
-                        'res.partner.' + plant_initials)
+                    plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
                     plant_code_sequence = '00' + str(plant_code_sequence)
-                    plant_code_sequence = plant_code_sequence[len(
-                        plant_code_sequence)-5:]
-                    order.plant_code = plant_initials + \
-                        plant_code_sequence[0:3] + \
-                        '-' + plant_code_sequence[3:]
+                    plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
+                    order.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
                     if partner.parent_id:
                         partner.sudo().parent_id.plant_code = order.plant_code
                     else:
@@ -94,8 +84,7 @@ class SaleOrder(models.Model):
     def set_next_job_number_sequence(self):
         for order in self:
             if self.env['ir.config_parameter'].sudo().get_param("sale.job_number_activate"):
-                next_job_number = self.env['ir.sequence'].next_by_code(
-                    'sale.order.job.number')
+                next_job_number = self.env['ir.sequence'].next_by_code('sale.order.job.number')
                 if next_job_number:
                     order.sequence_job_number = next_job_number
                 else:
@@ -104,10 +93,8 @@ class SaleOrder(models.Model):
                 order.sequence_job_number = False
 
     def get_prefix_set(self):
-        job_number_activated = self.env['ir.config_parameter'].sudo(
-        ).get_param("sale.job_number_activate")
-        prefix_job_number_set = self.env['ir.config_parameter'].sudo(
-        ).get_param("sale.prefix_job_number_set")
+        job_number_activated = self.env['ir.config_parameter'].sudo().get_param("sale.job_number_activate")
+        prefix_job_number_set = self.env['ir.config_parameter'].sudo().get_param("sale.prefix_job_number_set")
         if job_number_activated and prefix_job_number_set:
             prefix_values = prefix_job_number_set.split(",")
             prefix_array = []
@@ -118,10 +105,8 @@ class SaleOrder(models.Model):
             return [('select', 'Select')]
 
     def get_suffix_set(self):
-        job_number_activated = self.env['ir.config_parameter'].sudo(
-        ).get_param("sale.job_number_activate")
-        suffix_job_number_set = self.env['ir.config_parameter'].sudo(
-        ).get_param("sale.suffix_job_number_set")
+        job_number_activated = self.env['ir.config_parameter'].sudo().get_param("sale.job_number_activate")
+        suffix_job_number_set = self.env['ir.config_parameter'].sudo().get_param("sale.suffix_job_number_set")
         if job_number_activated and suffix_job_number_set:
             suffix_values = suffix_job_number_set.split(",")
             suffix_array = []
@@ -135,8 +120,7 @@ class SaleOrder(models.Model):
     def set_job_number(self):
         for order in self:
             if order in self.filtered(lambda rec: rec.prefix_job_number and rec.prefix_job_number != '' and rec.sequence_job_number and rec.suffix_job_number and rec.prefix_job_number != ''):
-                order.job_number = order.prefix_job_number + \
-                    order.sequence_job_number + order.suffix_job_number
+                order.job_number = order.prefix_job_number + order.sequence_job_number + order.suffix_job_number
                 if not order.has_job_number:
                     order.has_job_number = True
             else:

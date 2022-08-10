@@ -14,16 +14,12 @@ class ResPartner(models.Model):
     def _compute_plant_code(self):
         for partner in self:
             if not partner.plant_code and partner.is_company and partner.customer_rank == 1 and partner.display_name:
-                plant_initials = self.first_letters(
-                    partner, partner.display_name)
+                plant_initials = self.first_letters(partner, partner.display_name)
                 self.create_sequence('res.partner.' + plant_initials)
-                plant_code_sequence = self.env['ir.sequence'].next_by_code(
-                    'res.partner.' + plant_initials)
+                plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
                 plant_code_sequence = '00' + str(plant_code_sequence)
-                plant_code_sequence = plant_code_sequence[len(
-                    plant_code_sequence)-5:]
-                partner.plant_code = plant_initials + \
-                    plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
+                plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
+                partner.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
             else:
                 partner.plant_code = False
 
@@ -40,8 +36,7 @@ class ResPartner(models.Model):
         return alphanumeric[:3]
 
     def create_sequence(self, sequence_name):
-        current_sequence = self.env['ir.sequence'].search(
-            [('code', '=', sequence_name)])
+        current_sequence = self.env['ir.sequence'].search([('code', '=', sequence_name)])
         if not current_sequence:
             new_vals = {
                 'name': 'Industrial Kiln ' + sequence_name,
@@ -58,16 +53,12 @@ class ResPartner(models.Model):
     def _compute_plant_code_action(self):
         for partner in self:
             if partner.display_name:
-                plant_initials = self.first_letters(
-                    partner, partner.display_name)
+                plant_initials = self.first_letters(partner, partner.display_name)
                 self.create_sequence('res.partner.' + plant_initials)
-                plant_code_sequence = self.env['ir.sequence'].next_by_code(
-                    'res.partner.' + plant_initials)
+                plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
                 plant_code_sequence = '00' + str(plant_code_sequence)
-                plant_code_sequence = plant_code_sequence[len(
-                    plant_code_sequence)-5:]
-                partner.plant_code = plant_initials + \
-                    plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
+                plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
+                partner.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
             else:
                 partner.plant_code = False
 
