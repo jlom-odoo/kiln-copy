@@ -11,7 +11,6 @@ class SaleOrder(models.Model):
             lines = rec.order_line
 
             sum = 0
-
             for line in lines: 
                 sum += line.product_uom_qty * line.editable_cost
 
@@ -22,8 +21,6 @@ class SaleOrderline(models.Model):
     _inherit = 'sale.order.line'
 
     fs_margin = fields.Float('FS Margin', help="fs margin", compute='_compute_fs_margin')          #FS Margin = ((Sales price - cost)/Sales price) (Read-only field)
-    # sales_price = fields.Monetary('Sales Price', help="sales price")        #Sales price = (cost/(100-parts margin)) +(Overhead* cost) (Read-only field)
-    # editable_cost = fields.Float('Cost', compute='_compute_default_cost', help='Defaults to the cost of the product but is meant to be editable aswell', store=True, inverse='_set_cost')
     editable_cost = fields.Float('Cost', compute='_compute_default_cost', help='Defaults to the cost of the product but is meant to be editable aswell', store=True)
     parts_margin = fields.Selection(string='Price Margin', selection=[(str(x), str(x)+'%') for x in range(30,71)], default='30')
 
@@ -33,10 +30,7 @@ class SaleOrderline(models.Model):
 
             if rec.product_id and rec.product_id.x_studio_job_type == 'Field Service':
                 rec.fs_margin = (rec.price_unit - rec.editable_cost)/rec.price_unit
-                # rec.sales_price = 0
-            elif rec.product_id.x_studio_job_type == 'Parts':
-                rec.fs_margin = 0
-                # rec.sales_price = 0
+            # elif rec.product_id.x_studio_job_type == 'Parts':
             # rec.fs_margin = (rec.price_unit - rec.product_id.standard_price)/rec.price_unit if rec.product_id else 0
 
     @api.onchange('parts_margin')
@@ -59,6 +53,3 @@ class SaleOrderline(models.Model):
                 overhead_margin = self.env.company.overhead_margin
                 rec.price_unit = (rec.editable_cost * (1 + (100-int(rec.parts_margin))/100)) + ((100- overhead_margin)/100 * rec.editable_cost)
                 # rec.price_unit = (rec.editable_cost/(100-int(rec.parts_margin))) +(overhead_margin * rec.editable_cost)
-
-    # def _set_cost(self):
-    #     pass
