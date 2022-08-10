@@ -8,7 +8,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     plant_code = fields.Char(
-        string='Plant Code', compute='_compute_plant_code', store=True,)
+        string='Plant Code', compute='_compute_plant_code', inverse='_inverse_plant_code', store=True,)
 
     @api.depends('customer_rank')
     def _compute_plant_code(self):
@@ -26,6 +26,9 @@ class ResPartner(models.Model):
                     plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
             else:
                 partner.plant_code = False
+
+    def _inverse_plant_code(self):
+        pass
 
     def first_letters(self, partner, partner_name):
         alphanumeric = ""
