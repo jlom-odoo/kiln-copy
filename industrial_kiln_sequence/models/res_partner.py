@@ -9,8 +9,9 @@ class ResPartner(models.Model):
 
     plant_code = fields.Char(string='Plant Code', compute='_compute_plant_code', inverse='_inverse_plant_code', store=True)
 
-    @api.depends('customer_rank')
+    @api.depends('customer_rank', 'display_name')
     def _compute_plant_code(self):
+        
         for partner in self:
             if not partner.plant_code and partner.is_company and partner.customer_rank == 1 and partner.display_name:
                 plant_initials = self.first_letters(partner, partner.display_name)
