@@ -10,18 +10,18 @@ class ResPartner(models.Model):
     plant_code = fields.Char(string='Plant Code', compute='_compute_plant_code', inverse='_inverse_plant_code', store=True)
 
     @api.depends('customer_rank', 'name', 'is_company')
-    def _compute_plant_code(self):
-        
+    def _compute_plant_code(self):   
         for partner in self:
-            if not partner.plant_code and partner.is_company and partner.customer_rank == 1 and partner.name:
-                plant_initials = self.first_letters(partner, partner.name)
-                self.create_sequence('res.partner.' + plant_initials)
-                plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
-                plant_code_sequence = '00' + str(plant_code_sequence)
-                plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
-                partner.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
-            else:
-                partner.plant_code = False
+            if not partner.plant_code:
+                if partner.is_company and partner.customer_rank == 1 and partner.name:
+                    plant_initials = self.first_letters(partner, partner.name)
+                    self.create_sequence('res.partner.' + plant_initials)
+                    plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
+                    plant_code_sequence = '00' + str(plant_code_sequence)
+                    plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
+                    partner.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
+                else:
+                    partner.plant_code = False
 
     def _inverse_plant_code(self):
         pass
