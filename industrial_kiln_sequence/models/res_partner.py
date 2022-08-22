@@ -9,11 +9,12 @@ class ResPartner(models.Model):
 
     plant_code = fields.Char(string='Plant Code', compute='_compute_plant_code', inverse='_inverse_plant_code', store=True)
 
-    @api.depends('customer_rank')
+    @api.depends('customer_rank', 'name', 'is_company')
     def _compute_plant_code(self):
+        
         for partner in self:
-            if not partner.plant_code and partner.is_company and partner.customer_rank == 1 and partner.display_name:
-                plant_initials = self.first_letters(partner, partner.display_name)
+            if not partner.plant_code and partner.is_company and partner.customer_rank == 1 and partner.name:
+                plant_initials = self.first_letters(partner, partner.name)
                 self.create_sequence('res.partner.' + plant_initials)
                 plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
                 plant_code_sequence = '00' + str(plant_code_sequence)

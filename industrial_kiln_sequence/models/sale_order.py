@@ -30,7 +30,7 @@ class SaleOrder(models.Model):
             partner = self.partner_id
             if not order.plant_code:
                 if partner.is_company or partner.parent_id:
-                    plant_initials = self.first_letters(partner, partner.display_name)
+                    plant_initials = self.first_letters(partner, partner.name)
                     self.create_sequence('res.partner.' + plant_initials)
                     plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
                     plant_code_sequence = '00' + str(plant_code_sequence)
