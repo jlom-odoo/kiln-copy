@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
     prefix_job_number = fields.Selection(string='Prefix Job Number', selection="get_prefix_set")
     suffix_job_number = fields.Selection(string='Suffix Job number', selection="get_suffix_set")
     has_job_number = fields.Boolean('Has Job Number')
-    plant_code = fields.Char(string='Plant Code', compute='_compute_plant_code', store=True)
+    plant_code = fields.Char(string='Plant Code', compute='_compute_plant_code', store=True, readonly=True)
     # just to ensure, the error should not be present
     _sql_constraints = [
         ('sequence_job_number_uniq', 'unique(sequence_job_number)',
@@ -24,20 +24,22 @@ class SaleOrder(models.Model):
     def _compute_plant_code(self):
         for order in self:
             order.plant_code = order.partner_id.commercial_partner_id.plant_code
+            if not order.plant_code:
+                self._set_plant_code()
 
     def _set_plant_code(self):
         for order in self:
             partner = self.partner_id
             if not order.plant_code:
-                if partner.is_company or partner.parent_id:
+                if partner.is_company or partner.commercial_partner_id:
                     plant_initials = self.first_letters(partner, partner.name)
                     self.create_sequence('res.partner.' + plant_initials)
                     plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
                     plant_code_sequence = '00' + str(plant_code_sequence)
                     plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
                     order.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
-                    if partner.parent_id:
-                        partner.sudo().parent_id.plant_code = order.plant_code
+                    if partner.commercial_partner_id:
+                        partner.sudo().commercial_partner_id.plant_code = order.plant_code
                     else:
                         partner.sudo().plant_code = order.plant_code
                 else:

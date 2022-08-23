@@ -6,7 +6,7 @@ from odoo import models, fields, api
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    plant_code = fields.Char(string='Plant Code', compute='_compute_plant_code', inverse='_inverse_plant_code', store=True)
+    plant_code = fields.Char(string='Plant Code', compute='_compute_plant_code', store=True, readonly=True)
 
     @api.depends('customer_rank', 'name', 'is_company')
     def _compute_plant_code(self):   
@@ -21,9 +21,6 @@ class ResPartner(models.Model):
                     partner.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
             else:
                 partner.plant_code = False
-
-    def _inverse_plant_code(self):
-        pass
 
     def first_letters(self, partner, partner_name):
         alphanumeric = ""
