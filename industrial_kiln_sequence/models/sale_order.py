@@ -24,8 +24,6 @@ class SaleOrder(models.Model):
     def _compute_plant_code(self):
         for order in self:
             order.plant_code = order.partner_id.commercial_partner_id.plant_code
-            if not order.plant_code:
-                self._set_plant_code()
 
     def _set_plant_code(self):
         for order in self:
