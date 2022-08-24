@@ -13,19 +13,12 @@ class SaleOrder(models.Model):
     prefix_job_number = fields.Selection(string='Prefix Job Number', selection="get_prefix_set")
     suffix_job_number = fields.Selection(string='Suffix Job number', selection="get_suffix_set")
     has_job_number = fields.Boolean('Has Job Number')
-    plant_code = fields.Char(string='Plant Code', compute='_compute_plant_code', store=True)
+    plant_code = fields.Char(string='Plant Code', related='partner_id.commercial_partner_id.plant_code', store=True)
     # just to ensure, the error should not be present
     _sql_constraints = [
         ('sequence_job_number_uniq', 'unique(sequence_job_number)',
          " Field sequence_job_number should be unique. Use valid Job Number settings")
     ]
-
-    @api.depends('partner_id', 'partner_id.commercial_partner_id.plant_code')
-    def _compute_plant_code(self):
-        for order in self:
-            order.plant_code = order.partner_id.commercial_partner_id.plant_code
-            if not order.plant_code:
-                order.partner_id.commercial_partner_id.create_plant_code()
 
     def set_next_job_number_sequence(self):
         for order in self:
@@ -76,5 +69,6 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         self.set_next_job_number_sequence()
-        self._set_plant_code()
+        if not self.plant_code:
+                self.partner_id.commercial_partner_id.create_plant_code()
         super(SaleOrder, self).action_confirm()
