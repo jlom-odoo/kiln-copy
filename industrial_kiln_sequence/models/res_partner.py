@@ -6,7 +6,7 @@ from odoo import models, fields, api
 class Partner(models.Model):
     _inherit = 'res.partner'
 
-    plant_code = fields.Char(string='Plant Code', store=True)
+    plant_code = fields.Char(string='Plant Code', store=True, copy=False)
 
     def get_plant_code(self, partner_name, country_id=False):
         plant_initials = self.first_letters(partner_name, country_id)
