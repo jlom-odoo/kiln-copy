@@ -37,7 +37,7 @@ class Partner(models.Model):
     
     def create_plant_code(self):
         for partner in self:
-            partner.plant_code = partner.get_plant_code(partner.name, partner.country_id)
+            partner.plant_code = partner.get_plant_code(partner.name, partner.country_id.id)
 
     def create_sequence(self, sequence_name):
         current_sequence = self.env['ir.sequence'].search([('code', '=', sequence_name)])
