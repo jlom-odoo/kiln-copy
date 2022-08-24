@@ -25,7 +25,7 @@ class SaleOrder(models.Model):
         for order in self:
             order.plant_code = order.partner_id.commercial_partner_id.plant_code
             if not order.plant_code:
-                order.commercial_partner_id.create_plant_code()
+                order.partner_id.commercial_partner_id.create_plant_code()
 
     def set_next_job_number_sequence(self):
         for order in self:
