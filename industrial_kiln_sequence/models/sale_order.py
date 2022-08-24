@@ -24,49 +24,8 @@ class SaleOrder(models.Model):
     def _compute_plant_code(self):
         for order in self:
             order.plant_code = order.partner_id.commercial_partner_id.plant_code
-
-    def _set_plant_code(self):
-        for order in self:
-            partner = self.partner_id
             if not order.plant_code:
-                if partner.is_company or partner.commercial_partner_id:
-                    plant_initials = self.first_letters(partner, partner.name)
-                    self.create_sequence('res.partner.' + plant_initials)
-                    plant_code_sequence = self.env['ir.sequence'].next_by_code('res.partner.' + plant_initials)
-                    plant_code_sequence = '00' + str(plant_code_sequence)
-                    plant_code_sequence = plant_code_sequence[len(plant_code_sequence)-5:]
-                    order.plant_code = plant_initials + plant_code_sequence[0:3] + '-' + plant_code_sequence[3:]
-                    if partner.commercial_partner_id:
-                        partner.sudo().commercial_partner_id.plant_code = order.plant_code
-                    else:
-                        partner.sudo().plant_code = order.plant_code
-                else:
-                    order.plant_code = False
-
-    def first_letters(self, partner, partner_name):
-        alphanumeric = ""
-        for character in partner_name:
-            if character.isalnum():
-                alphanumeric += character.upper()
-        if partner.country_id:
-            alphanumeric += partner.country_id.name[:3].upper()
-        return alphanumeric[:3]
-
-    def create_sequence(self, sequence_name):
-        current_sequence = self.env['ir.sequence'].search(
-            [('code', '=', sequence_name)])
-        if not current_sequence:
-            new_vals = {
-                'name': 'Industrial Kiln ' + sequence_name,
-                'code': sequence_name,
-                'implementation': 'standard',
-                'prefix': '',
-                'suffix': '',
-                'number_next': 100,
-                'padding': 0,
-                'number_increment': 1
-            }
-            self.env['ir.sequence'].sudo().create(new_vals)
+                order.commercial_partner_id.create_plant_code()
 
     def set_next_job_number_sequence(self):
         for order in self:
