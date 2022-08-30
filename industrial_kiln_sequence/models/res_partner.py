@@ -19,9 +19,8 @@ class Partner(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('is_company'):
-                if not vals.get('plant_code') and vals.get('customer_rank') == 1 and vals.get('name'):
-                    vals['plant_code'] = self.get_plant_code(vals['name'], vals.get('country_id', False))
+            if vals.get('is_company') and not vals.get('plant_code') and vals.get('customer_rank') == 1 and vals.get('name'):
+                vals['plant_code'] = self.get_plant_code(vals['name'], vals.get('country_id', False))
             else:
                 vals['plant_code'] = False
         return super(Partner, self).create(vals_list)
