@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="jt_capital" model="job.type">
+            <field name="name">Capital</field>
+        </record>
+        <record id="jt_evaluation" model="job.type">
+            <field name="name">Evaluation</field>
+        </record>
+        <record id="jt_field_service" model="job.type">
+            <field name="name">Field Service</field>
+        </record>
+        <record id="jt_ikdu" model="job.type">
+            <field name="name">IKDU</field>
+        </record>
+        <record id="jt_parts" model="job.type">
+            <field name="name">Parts</field>
+        </record>
+        <record id="jt_survey" model="job.type">
+            <field name="name">Survey</field>
+        </record>
+        <record id="jt_tomtomtools" model="job.type">
+            <field name="name">TomTomTools</field>
+        </record>
+        <record id="jt_t_trac" model="job.type">
+            <field name="name">T-Trac</field>
+        </record>
+        <record id="jt_c_trac" model="job.type">
+            <field name="name">C-Trac</field>
+        </record>
+        <record id="jt_ikd_inclinometer" model="job.type">
+            <field name="name">IKD Inclinometer</field>
+        </record>
+        <record id="jt_used" model="job.type">
+            <field name="name">Used</field>
+        </record>
+        <record id="jt_lubrication" model="job.type">
+            <field name="name">Lubrication</field>
+        </record>
+    </data>
+</odoo>

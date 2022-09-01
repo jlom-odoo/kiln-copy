@@ -13,21 +13,8 @@
                     <field name="parts_margin" class="text-right"/>
                     <field name="editable_cost" />
                     <field name="fs_margin"/>
-                  
                 </xpath>
             </field>
         </record>
-        <!-- <record id="sale_order_line_inherit_industrial" model="ir.ui.view">
-            <field name="name">sale.order.line.view.form.inherit</field>
-            <field name="model">sale.order.line</field>
-            <field name="inherit_id" ref="sale.view_order_line_tree"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='price_subtotal']" position="before">
-                      
-                    <field name="fs_margin"/>
-                  
-                </xpath>
-            </field>
-        </record> -->
     </data>
 </odoo>
