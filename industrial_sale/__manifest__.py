@@ -19,6 +19,7 @@ Price calculated based on Margin
         'security/ir.model.access.csv',
         'views/sale_order_view.xml',
         'views/res_config_setting_view.xml',
+        'views/product_template_view.xml',
         'data/data.xml',
     ],
     'installable': True,
