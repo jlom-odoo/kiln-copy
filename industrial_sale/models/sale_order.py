@@ -23,14 +23,14 @@ class SaleOrderline(models.Model):
     @api.depends('product_id')
     def _compute_fs_margin(self):
         for line in self:
-            is_field_service = line.product_id.job_type == self.env.ref('industrial_sale.jt_field_service')
+            is_field_service = line.product_id.job_type == self.env.ref('industrial_sale.jt_field_service', raise_if_not_found=False)
 
             line.fs_margin = (line.price_unit - line.editable_cost)/line.price_unit if is_field_service else 0
 
     @api.onchange('parts_margin')
     def recompute_sales_price(self):
         for line in self:
-            if line.product_id.job_type == self.env.ref('industrial_sale.jt_parts'):
+            if line.product_id.job_type == self.env.ref('industrial_sale.jt_parts', raise_if_not_found=False):
                 overhead_margin = self.env.company.overhead_margin
                 line.price_unit = (line.editable_cost / int(line.parts_margin)) +(overhead_margin * line.editable_cost)
 
@@ -42,6 +42,6 @@ class SaleOrderline(models.Model):
             if line.product_id:
                 line.editable_cost = line.product_id.standard_price
 
-            if line.product_id.job_type == self.env.ref('industrial_sale.jt_parts'):
+            if line.product_id.job_type == self.env.ref('industrial_sale.jt_parts', raise_if_not_found=False):
                 overhead_margin = self.env.company.overhead_margin
                 line.price_unit = (line.editable_cost * (1 + (100 - int(line.parts_margin)) / 100)) + ((100 - overhead_margin)/100 * line.editable_cost)
