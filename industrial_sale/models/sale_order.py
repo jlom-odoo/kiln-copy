@@ -20,8 +20,8 @@ class SaleOrderline(models.Model):
     fs_margin = fields.Float('FS Margin', help='fs margin', compute='_compute_fs_margin', store=True) 
     fs_margin_in_percent = fields.Char('FS Margin(%)', help='fs margin in percentage', default='0%') 
 
-    editable_cost = fields.Float('Cost', compute='_compute_default_cost', help='Defaults to the cost of the product but is meant to be editable aswell', readonly=False)
-    parts_margin = fields.Selection(string='Price Margin', selection=[(str(x), str(x)+'%') for x in range(30,71)], default='30')
+    editable_cost = fields.Float('Cost', compute='_compute_default_cost', help='Defaults to the cost of the product but is meant to be editable aswell', readonly=False, store=True)
+    line_margin = fields.Selection(string='Price Margin', selection=[(str(x), str(x)+'%') for x in range(30,71)], default='30')
 
 
     @api.depends('editable_cost', 'price_unit')
@@ -35,13 +35,19 @@ class SaleOrderline(models.Model):
 
             line.fs_margin_in_percent = str(line.fs_margin * 100)+'%'
 
-
-    @api.onchange('parts_margin','editable_cost')
+    @api.onchange('line_margin','price_unit')
+    def _compute_fs_cost(self):
+        for line in self:
+            if line.product_id.margin_calculation == 'FS':
+                    line.price_unit = line.price_unit - ((int(line.line_margin)/100) * line.price_unit)
+                    continue
+            
+    @api.onchange('line_margin','editable_cost')
     def recompute_sales_price(self):
         for line in self:
             if line.product_id.margin_calculation == 'Parts':
                 overhead_margin = self.env.company.overhead_margin
-                line.price_unit = line.editable_cost / ((100 - int(line.parts_margin))/100) +((overhead_margin/100) * line.editable_cost)
+                line.price_unit = line.editable_cost / ((100 - int(line.line_margin))/100) +((overhead_margin/100) * line.editable_cost)
 
     @api.depends('product_id')
     def _compute_default_cost(self):

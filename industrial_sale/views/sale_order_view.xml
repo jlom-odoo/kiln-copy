@@ -13,8 +13,8 @@
                     <field name="editable_cost"/>
                     <field name="fs_margin" invisible="1"/>
                     <field name="margin_calculation" invisible="1"/>
-                    <field name="parts_margin" class="text-right" optional="hide" attrs="{'invisible': [('margin_calculation', '=', 'FS')]}"/>
-                    <field name="fs_margin_in_percent" attrs="{'invisible': [('margin_calculation', '=', 'Parts')]}" optional="hide"/>
+                    <field name="line_margin" class="text-right" optional="hide"/>
+                    <field name="fs_margin_in_percent" optional="hide"/>
                 </xpath>
             </field>
         </record>
