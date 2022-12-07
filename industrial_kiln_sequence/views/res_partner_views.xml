@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('o_address_format')]" position="after">
-                <field name="plant_code" attrs="{'invisible': [('plant_code', '=', False)]}" readonly="1"/>       
+                <field name="plant_code" attrs="{'invisible': [('plant_code', '=', False)]}" readonly="1"/>
             </xpath>
         </field>
     </record>

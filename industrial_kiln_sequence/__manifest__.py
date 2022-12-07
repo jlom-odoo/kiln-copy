@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "industrial_kiln_added_fields",
+    'name': "Industrial Kiln Job Number",
 
     'summary': """
         This module adds Job Number field to sales order when confirmed and quotation and adds plant code to partner info when a sales order
@@ -29,9 +29,4 @@
         'views/sale_views.xml',
         'views/res_partner_views.xml',  
     ],
-    # only loaded in demonstration mode
-    'demo': [
-    ],
-    # 'post_init_hook': 'plant_code_post_init',
-    # 'uninstall_hook': "plant_code_reset_uninstall_hook",
 }

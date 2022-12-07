@@ -70,6 +70,5 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         self.set_next_job_number_sequence()
         for order in self:
-            if not order.plant_code:
-                order.partner_id.commercial_partner_id.create_plant_code()
+            order.partner_id.commercial_partner_id.create_plant_code()
         super(SaleOrder, self).action_confirm()
