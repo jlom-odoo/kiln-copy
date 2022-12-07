@@ -38,16 +38,14 @@ class SaleOrderline(models.Model):
     @api.onchange('line_margin','price_unit')
     def _compute_fs_cost(self):
         for line in self:
-            if line.product_id.margin_calculation == 'FS':
-                    line.price_unit = line.price_unit - ((int(line.line_margin)/100) * line.price_unit)
-                    continue
+            margin_calculation = line.product_id.margin_calculation == 'FS'
+            line.price_unit = line.price_unit - ((int(line.line_margin)/100) * line.price_unit) if margin_calculation else line.price_unit
             
     @api.onchange('line_margin','editable_cost')
     def recompute_sales_price(self):
-        for line in self:
-            if line.product_id.margin_calculation == 'Parts':
-                overhead_margin = self.env.company.overhead_margin
-                line.price_unit = line.editable_cost / ((100 - int(line.line_margin))/100) +((overhead_margin/100) * line.editable_cost)
+        for line in self.filtered(lambda l: l.product_id.margin_calculation == 'Parts'):
+            overhead_margin = self.env.company.overhead_margin
+            line.price_unit = line.editable_cost / ((100 - int(line.line_margin))/100) +((overhead_margin/100) * line.editable_cost)
 
     @api.depends('product_id')
     def _compute_default_cost(self):
