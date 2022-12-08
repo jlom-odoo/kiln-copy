@@ -18,9 +18,6 @@ class IrSequence(models.Model):
         # is a number from 0-9. Note, the last 2 digits will never be 00. If the
         previous sequence ended with 99, the next sequence will end with 01.
         '''
-        # if len(plant_initials) != 3:
-        #     raise ValidationError('Plant Initials must be exactly 3 characters long')
-
         self.check_access_rights('read')
         sequence_code = 'Plant-Number-' + plant_initials
         company_id = self.env.company.id
@@ -44,12 +41,7 @@ class IrSequence(models.Model):
 
         next_sequence = seq_id.next_by_id()
 
-        '''
-        Skip sequences that end with 00
-        '''
         if next_sequence[-2:] == '00':
             next_sequence = seq_id.next_by_id()
-        '''
-        Add the dash before the last 2 numbers
-        '''
+
         return next_sequence[:-2] + '-' + next_sequence[-2:]
