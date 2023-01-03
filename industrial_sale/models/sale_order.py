@@ -18,13 +18,12 @@ class SaleOrderline(models.Model):
     margin_calculation = fields.Selection(related='product_id.margin_calculation')
 
     fs_margin = fields.Float('FS Margin', help='fs margin', compute='_compute_fs_margin', store=True) 
-    fs_margin_in_percent = fields.Char('FS Margin(%)', help='fs margin in percentage', default='0%') 
 
     editable_cost = fields.Float('Cost', compute='_compute_default_cost', help='Defaults to the cost of the product but is meant to be editable aswell', readonly=False, store=True)
     line_margin = fields.Selection(string='Price Margin', selection=[(str(x), str(x)+'%') for x in range(30,71)], default='30')
 
 
-    @api.depends('editable_cost', 'price_unit')
+    @api.depends('editable_cost', 'price_unit', 'line_margin')
     def _compute_fs_margin(self):
         for line in self:
             line.fs_margin = 0
@@ -33,15 +32,15 @@ class SaleOrderline(models.Model):
             if line.price_unit and line.editable_cost and is_field_service:
                 line.fs_margin = (line.price_unit - line.editable_cost)/line.price_unit
 
-            line.fs_margin_in_percent = str(line.fs_margin * 100)+'%'
-
     @api.onchange('line_margin','price_unit')
     def _compute_fs_cost(self):
         for line in self:
             margin_calculation = line.product_id.margin_calculation == 'FS'
-            line.price_unit = line.price_unit - ((int(line.line_margin)/100) * line.price_unit) if margin_calculation else line.price_unit
+            # line.price_unit = line.price_unit - ((int(line.line_margin)/100) * line.price_unit) if margin_calculation else line.price_unit
+            # line.price_unit = line.price_unit - ((int(line.line_margin)/100) * line.price_unit) if margin_calculation else line.price_unit
+            line.editable_cost = line.price_unit - ((int(line.line_margin)/100) * line.price_unit) if margin_calculation else line.editable_cost
             
-    @api.onchange('line_margin','editable_cost')
+    @api.onchange('editable_cost','line_margin')
     def recompute_sales_price(self):
         for line in self.filtered(lambda l: l.product_id.margin_calculation == 'Parts'):
             overhead_margin = self.env.company.overhead_margin
@@ -49,5 +48,5 @@ class SaleOrderline(models.Model):
 
     @api.depends('product_id')
     def _compute_default_cost(self):
-        for line in self:
+        for line in self.filtered('id'):
             line.editable_cost = line.product_id.standard_price
