@@ -4,28 +4,19 @@ from odoo import api, fields, models
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    job_number = fields.Char('Job Number', compute='set_job_number', store=True)
-    sequence_job_number = fields.Char(string='Sequence Job number')
-    prefix_job_number = fields.Selection(string='Prefix Job Number', selection="get_prefix_set")
-    suffix_job_number = fields.Selection(string='Suffix Job number', selection="get_suffix_set")
-    has_job_number = fields.Boolean('Has Job Number')
+    job_number = fields.Char('Job Number', compute='set_job_number', store=True, copy=False)
+    sequence_job_number = fields.Char(string='Sequence Job number', copy=False)
+    prefix_job_number = fields.Selection(string='Prefix Job Number', selection="get_prefix_set", copy=False)
+    suffix_job_number = fields.Selection(string='Suffix Job number', selection="get_suffix_set", copy=False)
+    has_job_number = fields.Boolean('Has Job Number', copy=False)
     plant_code = fields.Char(string='Plant Code', related='partner_id.commercial_partner_id.plant_code', store=True, copy=False)
     # just to ensure, the error should not be present
+    
     _sql_constraints = [
         ('sequence_job_number_uniq', 'unique(sequence_job_number)',
          " Field sequence_job_number should be unique. Use valid Job Number settings")
     ]
 
-
-    @api.model
-    def create(self, vals):
-        if vals.get('job_number'):
-            vals.pop('job_number') 
-            vals.pop('has_job_number') if vals.get('has_job_number') else None
-            vals.pop('prefix_job_number') if vals.get('prefix_job_number') else None
-            vals.pop('suffix_job_number') if vals.get('suffix_job_number') else None
-        vals.pop('sequence_job_number') if vals.get('sequence_job_number') else None
-        return super().create(vals)
 
     def set_next_job_number_sequence(self):
         for order in self:
