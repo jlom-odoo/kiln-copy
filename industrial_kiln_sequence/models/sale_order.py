@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
-
-import logging
-
-from odoo import models, fields, api, _
+from odoo import api, fields, models
 
 
 class SaleOrder(models.Model):
@@ -19,6 +15,17 @@ class SaleOrder(models.Model):
         ('sequence_job_number_uniq', 'unique(sequence_job_number)',
          " Field sequence_job_number should be unique. Use valid Job Number settings")
     ]
+
+
+    @api.model
+    def create(self, vals):
+        if vals.get('job_number'):
+            vals.pop('job_number') 
+            vals.pop('has_job_number') if vals.get('has_job_number') else None
+            vals.pop('prefix_job_number') if vals.get('prefix_job_number') else None
+            vals.pop('suffix_job_number') if vals.get('suffix_job_number') else None
+        vals.pop('sequence_job_number') if vals.get('sequence_job_number') else None
+        return super().create(vals)
 
     def set_next_job_number_sequence(self):
         for order in self:
@@ -55,10 +62,10 @@ class SaleOrder(models.Model):
         else:
             return [('select', 'Select')]
 
-    @api.depends('prefix_job_number', 'suffix_job_number')
+    @api.depends('prefix_job_number', 'suffix_job_number' ,'sequence_job_number')
     def set_job_number(self):
         for order in self:
-            if order in self.filtered(lambda rec: rec.prefix_job_number and rec.prefix_job_number != '' and rec.sequence_job_number and rec.suffix_job_number and rec.prefix_job_number != ''):
+            if order in self.filtered(lambda rec: rec.prefix_job_number and rec.prefix_job_number != '' and rec.sequence_job_number and rec.suffix_job_number and rec.suffix_job_number != ''):
                 order.job_number = order.prefix_job_number + order.sequence_job_number + order.suffix_job_number
                 if not order.has_job_number:
                     order.has_job_number = True
@@ -72,4 +79,4 @@ class SaleOrder(models.Model):
         for order in self:
             if not order.plant_code:
                 order.partner_id.commercial_partner_id.create_plant_code()
-        super(SaleOrder, self).action_confirm()
+        super().action_confirm()
