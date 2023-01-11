@@ -13,8 +13,8 @@ class SaleOrder(models.Model):
     # just to ensure, the error should not be present
     
     _sql_constraints = [
-        ('sequence_job_number_uniq', 'unique(sequence_job_number)',
-         " Field sequence_job_number should be unique. Use valid Job Number settings")
+        ('job_number_uniq', 'unique(job_number)',
++         " Field job_number should be unique. Use valid Job Number")
     ]
 
 
@@ -56,8 +56,8 @@ class SaleOrder(models.Model):
     @api.depends('prefix_job_number', 'suffix_job_number' ,'sequence_job_number')
     def set_job_number(self):
         for order in self:
-            if order in self.filtered(lambda rec: rec.prefix_job_number and rec.prefix_job_number != '' and rec.sequence_job_number and rec.suffix_job_number and rec.suffix_job_number != ''):
-                order.job_number = order.prefix_job_number + order.sequence_job_number + order.suffix_job_number
+            if order in self.filtered(lambda rec: (rec.prefix_job_number or rec.suffix_job_number) and rec.sequence_job_number):
+                order.job_number = (order.prefix_job_number if order.prefix_job_number else '') + order.sequence_job_number + (order.suffix_job_number if order.suffix_job_number else '')
                 if not order.has_job_number:
                     order.has_job_number = True
             else:
