@@ -36,8 +36,6 @@ class SaleOrderline(models.Model):
     def _compute_fs_cost(self):
         for line in self:
             margin_calculation = line.product_id.margin_calculation == 'FS'
-            # line.price_unit = line.price_unit - ((int(line.line_margin)/100) * line.price_unit) if margin_calculation else line.price_unit
-            # line.price_unit = line.price_unit - ((int(line.line_margin)/100) * line.price_unit) if margin_calculation else line.price_unit
             line.editable_cost = line.price_unit - ((int(line.line_margin)/100) * line.price_unit) if margin_calculation else line.editable_cost
             
     @api.onchange('editable_cost','line_margin')
