@@ -14,7 +14,7 @@ class SaleOrder(models.Model):
     
     _sql_constraints = [
         ('job_number_uniq', 'unique(job_number)',
-+         "The field Job Number (job_number) should be unique. Use a valid Job Number.")
+         "The field Job Number (job_number) should be unique. Use a valid Job Number.")
     ]
 
 
