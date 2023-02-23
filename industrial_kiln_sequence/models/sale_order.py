@@ -4,7 +4,7 @@ from odoo import api, fields, models
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    job_number = fields.Char('Job Number', compute='set_job_number', store=True, copy=False)
+    job_number = fields.Char('Job Number', compute='set_job_number', store=True, copy=False, tracking=True)
     sequence_job_number = fields.Char(string='Sequence Job number', copy=False)
     prefix_job_number = fields.Selection(string='Prefix Job Number', selection="get_prefix_set", copy=False)
     suffix_job_number = fields.Selection(string='Suffix Job number', selection="get_suffix_set", copy=False)
