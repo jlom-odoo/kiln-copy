@@ -8,14 +8,14 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='payment_term_id']" position="after">
                     
-                    <div class="content-group" colspan="2" attrs="{'invisible': [('sequence_job_number','=',False)]}">  
+                    <div class="content-group" colspan="2" attrs="{'invisible': [('state','!=','sale')]}">  
                         <div >
                             <h2 style="color:#F23127" attrs="{'invisible': [('prefix_job_number','!=',False),('suffix_job_number','!=',False)]}">--------------------------------------------------------------------------<br />
                             Edit to select Prefix and Suffix for Job Number </h2> 
                         </div>
                         <group>
                             <label for="sequence_job_number" string="Job Number" />
-                             <div  attrs="{'invisible': [('sequence_job_number','=',False)]}">
+                             <div  attrs="{'invisible': [('state','!=','sale')]}">
                                 <field name="prefix_job_number" placeholder="Select prefix"/><field name="sequence_job_number" readonly="1"/><field name="suffix_job_number" placeholder="Select suffix"/>     
                             </div>
                         </group>                   
