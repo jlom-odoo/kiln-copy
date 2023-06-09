@@ -8,10 +8,10 @@
         Task ID: 2985387
         Link to project: https://www.odoo.com/web#id=2985387&cids=17&model=project.task&view_type=form
     ''',
-    'author': 'Odoo PS',
+    'author': 'Odoo Inc',
     'website': 'https://www.odoo.com',
     'category': 'Mail',
-    'version': '14.0.1.0.0',
+    'version': '1.1.0',
     'depends': [
         'mail',
     ],
