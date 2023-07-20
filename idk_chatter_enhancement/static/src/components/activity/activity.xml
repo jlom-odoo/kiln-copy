@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <template t-name="idk_mail_activity_inherit" t-inherit="mail.Activity" t-inherit-mode="extension">
+        <xpath expr="//t[contains(@t-if, 'activity.note')]" position="before">
+            <t t-if="activity.idk_contact.id">
+                <img class="o_Activity_detailsUserAvatar o_Activity_detailsAssignationUserAvatar" t-attf-src="/web/image/res.partner/{{ activity.idk_contact.id }}/avatar_128" t-att-title="activity.idk_contact.display_name" t-att-alt="activity.idk_contact.display_name"/>
+                <span t-esc="activity.idk_contact.display_name" t-on-click="_onClickIdkContact"/>
+            </t>
+        </xpath>
+    </template>
+</templates>
