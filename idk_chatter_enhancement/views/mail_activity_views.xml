@@ -11,4 +11,16 @@
             </field>
         </field>
     </record>
+
+    <record id="idk_view_message_tree_inherit" model="ir.ui.view">
+        <field name="name">idk.mail.message.tree.inherit</field>
+        <field name="model">mail.message</field>
+        <field name="inherit_id" ref="mail.view_message_tree"/>
+        <field name="arch" type="xml">
+            <field name="model" position="after">
+                <field name="idk_contact"/>
+                <field name="idk_company"/>
+            </field>
+        </field>
+    </record>
 </odoo>
