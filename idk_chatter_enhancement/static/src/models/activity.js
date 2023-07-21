@@ -28,8 +28,3 @@ registerClassPatchModel("mail.activity", "idk_chatter_enhancement/static/src/mod
         return res;
     },
 });
-
-/* UPGRADE NOTE:    The names of the functions that register class and field patches in
- *                  the front end chatter models have changed from v15 to v16.
- *                  Check out mail/static/src/model/model_core.js
- */                
