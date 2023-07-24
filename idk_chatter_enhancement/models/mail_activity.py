@@ -5,7 +5,7 @@ class MailActivity(models.Model):
 
     # idk_contact populates only with contacts who are associated with the current company
     idk_contact = fields.Many2one(string="Contact", comodel_name="res.partner", help="Who was spoken to", domain="[('parent_id', '=', res_id)]")
-    company_type = fields.Char(string='Company Type', compute="_compute_company_type")
+    company_type = fields.Char(string="Company Type", compute="_compute_company_type")
 
     @api.depends("res_model", "res_id")
     def _compute_company_type(self):
