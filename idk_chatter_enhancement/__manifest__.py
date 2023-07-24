@@ -20,7 +20,8 @@
     "assets": {
         "web.assets_backend": [
             "idk_chatter_enhancement/static/src/models/activity.js",
-            "idk_chatter_enhancement/static/src/components/activity/activity.js"
+            "idk_chatter_enhancement/static/src/components/activity/activity.js",
+            "idk_chatter_enhancement/static/src/components/activity/activity.scss"
         ],
         "web.assets_qweb": [
             "idk_chatter_enhancement/static/src/components/activity/activity.xml"
