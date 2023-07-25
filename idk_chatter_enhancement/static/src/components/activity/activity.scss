@@ -1,0 +1,36 @@
+.o-idk-contact-pill {
+    border-radius: 2rem;
+    margin-bottom: .5rem;
+    padding: .25rem;
+    padding-right: .6rem;
+
+    color: #444B5A;
+    border: 1px solid #777;
+    transition: background-color 150ms ease-in-out;
+    width: fit-content;
+
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    
+    &:hover {
+        background-color: mix(gray('100'), gray('200'));
+        transition: background-color 100ms linear;
+        cursor: pointer;
+    }
+    &-done {
+        @extend .o-idk-contact-pill;
+        margin-bottom: 0rem;
+        background-color: #f6f7fa;
+        transition: background-color 150ms ease-in-out;
+    }
+    &-done:hover {
+        background-color: #fff; 
+        transition: background-color 100ms linear;
+    }
+}
+
+.o_Activity_core {
+    display: flex;
+    flex-direction: column;
+}

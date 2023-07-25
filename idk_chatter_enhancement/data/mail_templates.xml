@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<data>
+    <template id="idk_message_activity_done_inherit" inherit_id="mail.message_activity_done">
+        <xpath expr="//div[contains(@t-if, 'feedback')]" position="before">
+            <t t-if="activity.idk_contact.id">
+                <a class="o-idk-contact-pill-done" t-att-href="'/web#id=%s&amp;model=res.partner&amp;view_type=form' % (activity.idk_contact.id)" t-attf-title="Go to {{activity.idk_contact.display_name}}'s profile">
+                    <img class="o_Activity_detailsUserAvatar o_Activity_detailsAssignationUserAvatar" t-attf-src="/web/image/res.partner/{{ activity.idk_contact.id }}/avatar_128" t-att-title="activity.idk_contact.display_name" t-att-alt="activity.idk_contact.display_name"/>
+                    <span t-field="activity.idk_contact"/>
+                </a>
+            </t>
+        </xpath>
+    </template>
+</data>
+</odoo>

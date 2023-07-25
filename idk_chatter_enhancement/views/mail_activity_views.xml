@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="idk_mail_activity_view_form_popup_inherit" model="ir.ui.view">
+        <field name="name">idk.mail.activity.view.form.popup.inherit</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_form_popup"/>
+        <field name="arch" type="xml">
+            <field name="summary" position="after">
+                <field name="company_type" attrs="{'invisible': 1}" />
+                <field name="idk_contact" attrs="{'invisible': [('company_type', '!=', 'company')]}"/>     
+            </field>
+        </field>
+    </record>
+
+    <record id="idk_view_message_tree_inherit" model="ir.ui.view">
+        <field name="name">idk.mail.message.tree.inherit</field>
+        <field name="model">mail.message</field>
+        <field name="inherit_id" ref="mail.view_message_tree"/>
+        <field name="arch" type="xml">
+            <field name="model" position="after">
+                <field name="idk_contact"/>
+                <field name="idk_company"/>
+            </field>
+        </field>
+    </record>
+</odoo>
