@@ -3,7 +3,7 @@
     <template t-name="idk_mail_activity_inherit" t-inherit="mail.Activity" t-inherit-mode="extension">
         <xpath expr="//t[contains(@t-if, 'activity.note')]" position="before">
             <t t-if="activity.idk_contact.id">
-                <a class="o-idk-contact-pill" t-on-click="_onClickIdkContact" t-attf-title="Go to {{activity.idk_contact.display_name}} 's profile">
+                <a class="o-idk-contact-pill" t-on-click="_onClickIdkContact" t-attf-title="Go to {{activity.idk_contact.display_name}}'s profile">
                     <img class="o_Activity_detailsUserAvatar o_Activity_detailsAssignationUserAvatar" t-attf-src="/web/image/res.partner/{{ activity.idk_contact.id }}/avatar_128" t-att-title="activity.idk_contact.display_name" t-att-alt="activity.idk_contact.display_name"/>
                     <span class="o_tag_badge_text" t-esc="activity.idk_contact.display_name"/>
                 </a>
