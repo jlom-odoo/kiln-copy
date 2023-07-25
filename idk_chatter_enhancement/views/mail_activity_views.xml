@@ -17,7 +17,7 @@
         <field name="model">mail.message</field>
         <field name="inherit_id" ref="mail.view_message_tree"/>
         <field name="arch" type="xml">
-            <field name="model" position="after">
+            <field name="subject" position="before">
                 <field name="idk_contact"/>
                 <field name="idk_company"/>
             </field>
