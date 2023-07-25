@@ -7,7 +7,7 @@ class MailActivity(models.Model):
     idk_contact = fields.Many2one(string="Contact", comodel_name="res.partner", help="Who was spoken to", domain="[('parent_id', '=', res_id)]")
     company_type = fields.Char(string="Company Type", compute="_compute_company_type")
 
-    @api.depends("res_model_id", "res_id")
+    @api.depends("res_model_id.model", "res_id")
     def _compute_company_type(self):
         for activity in self:
             if activity.res_model_id.model == "res.partner":
