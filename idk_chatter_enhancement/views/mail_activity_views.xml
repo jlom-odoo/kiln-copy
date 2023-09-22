@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <field name="summary" position="after">
                 <field name="company_type" attrs="{'invisible': 1}" />
-                <field name="idk_contact" attrs="{'invisible': [('company_type', '!=', 'company')]}"/>     
+                <field name="idk_contact" attrs="{'invisible': [('company_type', '!=', 'company')]}" options="{'no_create': True}"/>
             </field>
         </field>
     </record>
@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="mail.view_message_tree"/>
         <field name="arch" type="xml">
             <field name="subject" position="before">
-                <field name="idk_contact"/>
+                <field name="idk_contact" options="{'no_create': True}"/>
                 <field name="idk_company"/>
             </field>
         </field>
