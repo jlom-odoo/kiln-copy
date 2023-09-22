@@ -11,7 +11,7 @@
     "author": "Odoo, Inc.",
     "website": "https://www.odoo.com",
     "category": "Custom Development",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "depends": ["mail"],
     "data": [
         "views/mail_activity_views.xml",
