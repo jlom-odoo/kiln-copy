@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
     # just to ensure, the error should not be present
     
     _sql_constraints = [
-        ('job_number_uniq', 'unique(job_number)',
+        ('job_number_uniq', 'unique(job_number, company_id)',
          "The field Job Number (job_number) should be unique. Use a valid Job Number.")
     ]
 
@@ -21,7 +21,7 @@ class SaleOrder(models.Model):
     def set_next_job_number_sequence(self):
         for order in self:
             if self.env['ir.config_parameter'].sudo().get_param("sale.job_number_activate"):
-                next_job_number = self.env['ir.sequence'].next_by_code('sale.order.job.number')
+                next_job_number = self.env['ir.sequence'].next_by_code('sale.order.job.number' + str(self.company_id.id))
                 if next_job_number:
                     order.sequence_job_number = next_job_number
                 else:
