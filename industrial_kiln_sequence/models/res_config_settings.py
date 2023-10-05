@@ -6,7 +6,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     def _get_next_barcode(self):
-        return self.env['ir.sequence'].search([('code', '=', 'sale.order.job.number' + str(self.company_id.id)), ('company_id', '=', self.company_id.id)]).number_next_actual
+        return self.env['ir.sequence'].search([('code', '=', 'sale.order.job.number')]).number_next_actual
 
     job_number_start_number = fields.Integer(string='Range from', config_parameter='sale.job_number_start_number')
     next_job_number = fields.Char(string='Next Job Number sequence', default=_get_next_barcode)
@@ -30,12 +30,12 @@ class ResConfigSettings(models.TransientModel):
 
     def create_sequence(self):
         if self.job_number_start_number:  
-            current_sequence = self.env['ir.sequence'].search([('code', '=', 'sale.order.job.number' + str(self.company_id.id)), ('company_id', '=', self.company_id.id)])
+            current_sequence = self.env['ir.sequence'].search([('code', '=', 'sale.order.job.number')])
             new_vals = {
-                    'name': 'Job number ' + self.company_id.name,
-                    'code': 'sale.order.job.number.' + str(self.company_id.id),
-                    'company_id': self.company_id,
+                    'name': 'Job number',
+                    'code': 'sale.order.job.number',
                     'implementation': 'standard',
+                    'company_id': False,
                     'prefix': '',
                     'suffix': '',
                     'number_next': self.job_number_start_number,
