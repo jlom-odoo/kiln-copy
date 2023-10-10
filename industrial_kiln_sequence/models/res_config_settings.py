@@ -32,9 +32,10 @@ class ResConfigSettings(models.TransientModel):
         if self.job_number_start_number:  
             current_sequence = self.env['ir.sequence'].search([('code', '=', 'sale.order.job.number')])
             new_vals = {
-                    'name': 'Job number Industrial Kiln',
+                    'name': 'Job number',
                     'code': 'sale.order.job.number',
                     'implementation': 'standard',
+                    'company_id': False,
                     'prefix': '',
                     'suffix': '',
                     'number_next': self.job_number_start_number,
