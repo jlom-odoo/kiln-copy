@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.idk</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form" />
+        <field name="priority" eval="0" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='inter_company']" position="after">
+                <br />
+                <div class="o_setting_right_pane">
+                    <span class="o_form_label">Grouping start day</span>
+                    <div class="text-muted">
+                        Choose start day of week from which weekly reporting/grouping should start
+                    </div>
+                    <field name="start_day_of_week"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
