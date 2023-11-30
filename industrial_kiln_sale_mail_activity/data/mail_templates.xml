@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="industrial_kiln_message_activity_assigned_inherit" inherit_id="mail.message_activity_assigned">
+            <xpath expr="//br" position="after">
+                <t t-if="activity.has_sale_order_info">
+                    <br/>
+                    <table class="table">
+                        <caption>Sales Order Information</caption>
+                        <tbody>
+                            <t t-foreach="activity.sale_order_field_ids" t-as="field">
+                                <tr t-if="activity.sale_order_id[field.name]">
+                                    <th t-out="field.field_description"/>
+                                    <t t-if="field.relation_field or field.relation">
+                                        <th>
+                                            <t t-foreach="activity.sale_order_id[field.name]" t-as="record">
+                                                <p t-out="record[record._rec_name]"/>
+                                            </t>
+                                        </th>
+                                    </t>
+                                    <t t-else="">
+                                        <th t-out="activity.sale_order_id[field.name]"/>
+                                    </t>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>
