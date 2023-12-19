@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_base_automation_form_inherit_industrial_kiln" model="ir.ui.view">
+        <field name="name">view.base.automation.form.inherit.industrial.kiln</field>
+        <field name="model">base.automation</field>
+        <field name="inherit_id" ref="base_automation.view_base_automation_form"/>
+        <field name="arch" type="xml">
+            <field name="activity_user_field_name" position="after">
+                <field name="sale_order_field_ids" widget="many2many_tags" domain="[('model','=','sale.order')]" attrs="{'invisible': [('model_name', '!=', 'sale.order'), ('state', '=', 'next_activity')]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>
