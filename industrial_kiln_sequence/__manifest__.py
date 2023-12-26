@@ -12,7 +12,7 @@
     'author': "Odoo Inc",
     'website': "https://www.odoo.com",
     'category': 'Customizations/Product',
-    'version': '1.1.2',
+    'version': '1.1.3',
     'license': 'OPL-1',
     # any module necessary for this one to work correctly
     'depends': ['base','sale'],
