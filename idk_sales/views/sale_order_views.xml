@@ -26,6 +26,11 @@
                             <field name="parts_material_cost"/>
                             <field name="parts_margin"  widget="percentage"/>
                         </group>
+                        <group string="Margin Values">
+                            <field name="invoiced_amount"/>
+                            <field name="margin_with_freight" widget="percentage"/>
+                            <field name="margin_without_freight" widget="percentage"/>
+                        </group>
                     </group>
                 </page>
             </xpath>
