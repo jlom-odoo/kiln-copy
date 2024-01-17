@@ -27,17 +27,17 @@ class TestSaleOrderTotalCost(TransactionCase):
         cls.env['ir.config_parameter'].sudo().set_param('sale.freight_profit_margin', 0.5)
         
     def test_total_cost(self):
-        self.assertEqual(120, self.so.total_cost, 
-                         "In this case, the total should be 120 which is a sum of the other costs")
+        self.assertEqual(80, self.so.total_cost, 
+                         "In this case, the total should be 80 which is a sum of the other costs")
     def test_parts_margin(self):
-        self.assertEqual(0.4166666666666667, self.so.parts_margin, 
-                         "In this case, the part margin should be 41.67 because parts_material_cost is the 50 percent of the total cost")
+        self.assertEqual(0.625, self.so.parts_margin, 
+                         "In this case, the part margin should be 0.645 because is the parts_material_cost/total_cost")
     def test_freight(self):
         self.assertEqual(40, self.so.freight, 
-                         "In this case, the part margin should be 40 because parts_material_cost is the 50 percent of the total cost")
+                         "In this case, the reult should be 40 as a result of (freight_in + freight_out) / freight_profit_margin")
     def test_margin_with_freight(self):
         self.assertEqual(0.2, self.so.margin_with_freight, 
-                         "In this case, the part margin should be 40 because parts_material_cost is the 50 percent of the total cost")
+                         "In this case, the part margin should be 0.2 as a result of ((invoiced_amount - (total_cost + freight)) / invoiced_amount)")
     def test_margin_without_freight(self):
-        self.assertEqual(0.5, self.so.margin_without_freight, 
-                         "In this case, the part margin should be 40 because parts_material_cost is the 50 percent of the total cost")
+        self.assertEqual(0.4666666666666667, self.so.margin_without_freight, 
+                         "In this case, the part margin should be 0.467 as a result of ((invoiced_amount - total_cost) / invoiced_amount)")
