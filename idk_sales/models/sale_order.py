@@ -20,7 +20,7 @@ class SaleOrder(models.Model):
     @api.depends('material_cost', 'overhead_cost', 'parts_material_cost', 'total_cost','freight')
     def _compute_total_cost(self):
         for order in self:
-            order.total_cost = order.material_cost + order.overhead_cost + order.labor_cost + order.parts_material_cost + order.freight
+            order.total_cost = order.material_cost + order.overhead_cost + order.labor_cost + order.parts_material_cost
 
     @api.depends('parts_material_cost','total_cost', 'parts_margin')
     def _compute_parts_margin(self):
@@ -40,21 +40,21 @@ class SaleOrder(models.Model):
         else:
             self.freight = 0.0
 
-    @api.depends('invoiced_amount','margin_with_freight')
-    def _compute_margin_with_freight(self):
-        invoiced_ids = self.filtered(lambda a: a.invoiced_amount > 0)
-        no_invoiced_ids = self - invoiced_ids
-        no_invoiced_ids.margin_with_freight = 0.0 
-        for order in invoiced_ids:
-            order.margin_with_freight = ((order.invoiced_amount - order.total_cost) / order.invoiced_amount)
-
-    @api.depends('amount_untaxed','margin_without_freight')
+    @api.depends('invoiced_amount','margin_without_freight', 'total_cost')
     def _compute_margin_without_freight(self):
-        untaxed_ids = self.filtered(lambda a: a.amount_untaxed > 0)
-        no_untaxed_ids = self - untaxed_ids
-        no_untaxed_ids.margin_without_freight = 0.0 
-        for order in untaxed_ids:
-            order.margin_without_freight = ((order.amount_untaxed - order.parts_material_cost) / order.amount_untaxed)
+        invoiced_orders  = self.filtered(lambda a: a.invoiced_amount > 0)
+        not_invoiced_orders = self - invoiced_orders
+        not_invoiced_orders.margin_without_freight = 0.0 
+        for order in invoiced_orders:
+            order.margin_without_freight = (order.invoiced_amount - order.total_cost) / order.invoiced_amount
+
+    @api.depends('invoiced_amount','margin_with_freight','total_cost','freight')
+    def _compute_margin_with_freight(self):
+        invoiced_orders = self.filtered(lambda a: a.invoiced_amount > 0)
+        not_invoiced_orders = self - invoiced_orders
+        not_invoiced_orders.margin_with_freight = 0.0 
+        for order in invoiced_orders:
+            order.margin_with_freight = (order.invoiced_amount - (order.total_cost + order.freight)) / order.invoiced_amount
 
     @api.depends('order_line.price_total','freight')
     def _amount_all(self):
