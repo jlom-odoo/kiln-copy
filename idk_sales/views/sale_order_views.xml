@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Cost" name="cost">
+                    <group colspan="2">
+                        <group>
+                            <field name="total_cost" readonly="1"/>
+                        </group>
+                        <group string="Field Service Cost">
+                            <field name="labor_cost"/>
+                            <field name="overhead_cost"/>
+                        </group>
+                        <group string="Freight">
+                            <field name="freight_in"/>
+                            <field name="freight_out"/>
+                            <field name="freight"/>
+
+                        </group>
+                        <group string="Parts Cost">
+                            <field name="material_cost"/>
+                            <field name="parts_material_cost"/>
+                            <field name="parts_margin"  widget="percentage"/>
+                        </group>
+                        <group string="Margin Values">
+                            <field name="invoiced_amount"/>
+                            <field name="margin_with_freight" widget="percentage"/>
+                            <field name="margin_without_freight" widget="percentage"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='tax_totals_json']" position="before">
+                <field name="freight"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
