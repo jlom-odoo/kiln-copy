@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.idk</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Commissions" name="commissions">
+                    <group>
+                        <group>
+                            <field name="commission_type"/>
+                            <field name="margin_amount"/>
+                            <field name="kas_parts_commission"/>
+                            <field name="kas_fs_commission"/>
+                            <field name="dm_commission"/>
+                            <field name="ts_commission"/>
+                        </group>
+                        <group>
+                            <button name="action_update_commissions" 
+                                    type="object" 
+                                    string="Update Commissions" 
+                                    class="btn-secondary"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="commission_rule_action" model="ir.actions.act_window">
+        <field name="name">Commission Rules</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">commission.rule</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="commission_rule_view_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new commission rule for your sales orders!
+            </p>
+        </field>
+    </record>
+    
+    <menuitem id="commission_rule_menu"
+            name="Commission Rules"
+            parent="sale.sale_menu_root"
+            sequence="10"
+            action="commission_rule_action"
+            groups="base.group_user"/>
+</odoo>
